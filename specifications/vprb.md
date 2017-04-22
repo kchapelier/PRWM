@@ -3,14 +3,16 @@
 
  * All numerical values are stored in big-endian byte order.
 
+The general structure of the file is the following : **One header** (2 bytes) followed by **one or more model blocks** (varying byte count).
+
 
 
 
 ## Header
 
- * *Version* : 1 byte (0 to 255)
- * *Compression* : 2 bits (0 to 3)
- * *Number of models* : 6 bits (0 to 63)
+ * **Version** : 1 byte (0 to 255)
+ * **Compression** : 2 bits (0 to 3)
+ * **Number of models** : 6 bits (0 to 63)
 
 ### Version
 
@@ -20,10 +22,10 @@ A value of 0 should be treated as an error by the decoder.
 
 ### Compression
 
- * *0* : No compression
- * *1* : Compressed using the LZSS algorithm
- * *2* : Reserved
- * *3* : Reserved
+ * **0** : No compression
+ * **1** : Compressed using the LZSS algorithm
+ * **2** : Reserved
+ * **3** : Reserved
 
 The availability of the compression in the encoder is not mandatory and up to the implementer.
 
@@ -42,7 +44,7 @@ A value of 0 should be treated as an error by the decoder.
 
 ### Model header
 
- * *Name* : An ASCII encoded C-string (one byte per character, terminated with a NUL character)
+ * **Name** : An ASCII encoded C-string (one byte per character, terminated with a NUL character)
 
 ### Model data
 

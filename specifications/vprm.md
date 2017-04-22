@@ -6,15 +6,17 @@
  * The format is designed to allow any number of custom attributes and doesn't force the use of any pre-defined attributes.
  * The format doesn't support any type of bone-based animations, morphing is achievable with custom attributes.
 
+The general structure of the file is the following : **One header** (2 bytes) followed by **one or more attribute blocks** (varying byte count) followed by **up to one indices block** (varying byte count).
+
 
 
 
 ## Header
 
- * *Version* : 1 byte (0 to 255)
- * *Mesh type* : 1 bit
- * *Indexing scheme* : 1 bit
- * *Number of attributes per vertex* : 6 bits (0 to 63)
+ * **Version** : 1 byte (0 to 255)
+ * **Mesh type** : 1 bit
+ * **Indexing scheme** : 1 bit
+ * **Number of attributes per vertex** : 6 bits (0 to 63)
 
 ### Version
 
@@ -24,13 +26,13 @@ A value of 0 should be treated as an error by the decoder.
 
 ### Mesh type
 
- * *0* : Point cloud
- * *1* : Triangle mesh
+ * **0** : Point cloud
+ * **1** : Triangle mesh
 
 ### Indexing scheme
 
- * *0* : One index per vertex
- * *1* : One index per attribute per vertex (similar to the scheme used in the Wavefront OBJ format)
+ * **0** : One index per vertex
+ * **1** : One index per attribute per vertex (similar to the scheme used in the Wavefront OBJ format)
 
 ### Number of attributes per vertex
 
@@ -47,18 +49,18 @@ It should be noted that most OpenGL implementations are currently limited to 16 
 
 ### Attribute header
 
- * *Name* : An ASCII encoded C-string (one byte per character, terminated with a NUL character)
- * *Type* : 2 bits (0 to 3)
- * *Cardinality* : 2 bits (0 to 3)
- * *Encoding type* : 4 bits (0 to 15)
- * *Number of values* : 3 bytes (0 to 16.777.215)
+ * **Name** : An ASCII encoded C-string (one byte per character, terminated with a NUL character)
+ * **Type** : 2 bits (0 to 3)
+ * **Cardinality** : 2 bits (0 to 3)
+ * **Encoding type** : 4 bits (0 to 15)
+ * **Number of values** : 3 bytes (0 to 16.777.215)
 
 #### Type
 
- * *0* : Integer
- * *1* : Unsigned integer
- * *2* : Single-precision float
- * *3* : Double-precision float
+ * **0** : Integer
+ * **1** : Unsigned integer
+ * **2** : Single-precision float
+ * **3** : Double-precision float
 
 #### Cardinality
 
@@ -77,18 +79,18 @@ It should be noted that double-precision floats are not supported in GLSL ES.
 
 This indicates how each elements are stored in the file and doesn't necessarily match the aforementioned type.
 
- * *0* : Reserved
- * *1* : Signed 32bit float (4 bytes)
- * *2* : Signed 64bit float (8 bytes)
- * *3* : Signed 8bit integer (1 byte)
- * *4* : Signed 16bit integer (2 bytes)
- * *5* : Signed 24bit integer (3 bytes)
- * *6* : Signed 32bit integer (4 bytes)
- * *7* : Unsigned 8bit integer (1 bytes)
- * *8* : Unsigned 16bit integer (2 bytes)
- * *9* : Unsigned 24bit integer (3 bytes)
- * *10* : Unsigned 32bit integer (4 bytes)
- * *11 to 15* : Reserved
+ * **0** : Reserved
+ * **1** : Signed 32bit float (4 bytes)
+ * **2** : Signed 64bit float (8 bytes)
+ * **3** : Signed 8bit integer (1 byte)
+ * **4** : Signed 16bit integer (2 bytes)
+ * **5** : Signed 24bit integer (3 bytes)
+ * **6** : Signed 32bit integer (4 bytes)
+ * **7** : Unsigned 8bit integer (1 bytes)
+ * **8** : Unsigned 16bit integer (2 bytes)
+ * **9** : Unsigned 24bit integer (3 bytes)
+ * **10** : Unsigned 32bit integer (4 bytes)
+ * **11 to 15** : Reserved
 
 ### Attribute values
 
@@ -101,7 +103,7 @@ While not directly encoded in the attribute header, the total length of the attr
 
 
 
-# Indexes block
+# Indices block
 
 The content of this space is highly dependent on the `Mesh type` and `Indexing scheme`.
 
@@ -131,10 +133,13 @@ The indexes are ordered by face and by vertex as such :
 
 ```
 face1vert1index, face1vert2index, face1vert3index, face2vert1index, face2vert2index, face2vert3index, ...
+```
 
 ## Triangle mesh with one index per attribute per vertex
 
 The indexes are ordered by face, by vertex and by attribute as such :
 
+```
 face1vert1att1index, face1vert1att2index, face1vert2att1index, face1vert2att2index, face1vert3att1index, face1vert3att2index,
 face2vert1att1index, face2vert1att2index, face2vert2att1index, face2vert2att2index, face2vert3att1index, face2vert3att2index, ...
+```
