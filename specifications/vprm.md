@@ -2,6 +2,8 @@
 # Variable Precision Model (VPrM) Specifications (version 1 / draft 2017-04-22)
 
  * All numerical values are stored in big-endian byte order.
+ * All signed integer values are stored in two's complement format.
+ * All float values are stored following the IEEE 754 spec.
  * The format supports two main types of geometries : point clouds and triangle meshes.
  * The format is designed to allow any number of custom attributes and doesn't force the use of any pre-defined attributes.
  * The format doesn't support any type of bone-based animations, morphing is achievable with custom attributes.
@@ -57,7 +59,7 @@ It should be noted that most OpenGL implementations are currently limited to 16 
 
 #### Type
 
- * **0** : Integer
+ * **0** : Signed Integer
  * **1** : Unsigned integer
  * **2** : Single-precision float
  * **3** : Double-precision float
