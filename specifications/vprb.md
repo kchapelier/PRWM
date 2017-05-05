@@ -3,7 +3,7 @@
 
  * All numerical values are stored in big-endian byte order.
 
-The general structure of the file is the following : **One header** (2 bytes) followed by **one or more model blocks** (varying byte count).
+The general structure of the file is the following : **One header** (2 bytes) followed by **one or more file blocks** (varying byte count).
 
 
 
@@ -11,43 +11,37 @@ The general structure of the file is the following : **One header** (2 bytes) fo
 ## Header
 
  * **Version** : 1 byte (0 to 255)
- * **Compression** : 2 bits (0 to 3)
- * **Number of models** : 6 bits (0 to 63)
+ * **Reserved** : 1 bits (0 to 1)
+ * **Number of files** : 7 bits (0 to 127)
 
 ### Version
 
-Indicates the version of the specification to apply while decoding this model.
+Indicates the version of the specification to apply while decoding this bundle.
 
 A value of 0 should be treated as an error by the decoder.
 
-### Compression
+### Number of files
 
- * **0** : No compression
- * **1** : Compressed using the LZSS algorithm
- * **2** : Reserved
- * **3** : Reserved
-
-The availability of the compression in the encoder is not mandatory and up to the implementer.
-
-However, the decoder must be able to read all valid VPRB files and thus must support this feature.
-
-### Number of models
-
-Indicates the number of models included in the
+Indicates the number of files included in the bundle.
 
 A value of 0 should be treated as an error by the decoder.
 
 
 
 
-## Model block
+## File block
 
-### Model header
+### File header
 
+ * **File type** : 4 bits (0 to 15)
+ * **Reserved** : 4 bits
  * **Name** : An ASCII encoded C-string (one byte per character, terminated with a NUL character)
 
-### Model data
+#### File type
 
-The remaining of the model block is filled with the model data as defined by the VPRM spec.
+ * **0** : VPRM file
+ * **1 to 15** : Reserved
 
-The model data contained in the block must not be compressed by itself, only the bundle can be compressed as a whole.
+### File data
+
+The remaining of the file block is filled with the file content.
