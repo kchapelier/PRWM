@@ -19,6 +19,7 @@ The general structure of the file is the following : **One header** (2 bytes) fo
  * **Mesh type** : 1 bit
  * **Indexing scheme** : 1 bit
  * **Number of attributes per vertex** : 6 bits (0 to 63)
+ * **Number of vertices** : 3 bytes (0 to 16777215)
 
 ### Version
 
@@ -111,7 +112,7 @@ The content of this space is highly dependent on the `Mesh type` and `Indexing s
 
 The number of bits per index must be deduced from the number of values of each attributes as such :
 
-`Bits per index = ceil(log2(Number of values))`
+`Bits per index = max(0, ceil(log2(Number of values + 1)))`
 
 Any remaining/not-set bits in the last byte should be set to 0 by the encoder and should be ignored by the decoder.
 
