@@ -15,7 +15,7 @@ The general structure of the file is the following : **One header** (2 bytes) fo
 
  * **Version** : 1 byte (0 to 255)
  * **Mesh type** : 1 bit
- * **Indices types* : 1 bit
+ * **Indices types** : 1 bit
  * **Number of attributes per vertex** : 6 bits (0 to 63)
  * **Number of values per attribute** : 3 bytes (0 to 16777215)
  * **Number of elements** : 3 bytes (0 to 16777215)
