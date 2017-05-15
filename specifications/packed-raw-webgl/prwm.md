@@ -9,7 +9,7 @@
  * The format prioritizes fast parsing over file weight.
  * The format is specifically designed for WebGL and will probably prove useless for any other platforms.
 
-The general structure of the file is the following : **One header** (2 bytes) followed by **one or more attribute blocks** (varying byte count) followed by **up to one indices block** (varying byte count).
+The general structure of the file is the following : **One header** (8 bytes) followed by **one or more attribute blocks** (varying byte count) followed by **up to one indices block** (varying byte count).
 
 ## Header
 

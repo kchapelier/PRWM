@@ -8,7 +8,7 @@
  * The format is designed to allow any number of custom attributes and doesn't force the use of any pre-defined attributes.
  * The format doesn't support any type of bone-based animations, morphing is achievable with custom attributes.
 
-The general structure of the file is the following : **One header** (2 bytes) followed by **one or more attribute blocks** (varying byte count) followed by **up to one indices block** (varying byte count).
+The general structure of the file is the following : **One header** (5 bytes) followed by **one or more attribute blocks** (varying byte count) followed by **up to one indices block** (varying byte count).
 
 
 

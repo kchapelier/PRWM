@@ -3,7 +3,7 @@
 
  * All numerical values are stored in big-endian byte order.
 
-The general structure of the file is the following : **One header** (2 bytes) followed by **one or more file blocks** (varying byte count).
+The general structure of the file is the following : **One header** (1 bytes) followed by **one or more file blocks** (varying byte count).
 
 
 
