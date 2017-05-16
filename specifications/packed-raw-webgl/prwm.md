@@ -1,6 +1,5 @@
 # Packed Raw WebGL Model (PRWM) Specifications (version 1 / draft 2017-05-14)
 
- * All numerical values are stored in big-endian byte order.
  * All signed integer values are stored in two's complement format.
  * All float values are stored following the IEEE 754 spec.
  * The format supports two main types of geometries : point clouds and triangle meshes.
@@ -16,7 +15,8 @@ The general structure of the file is the following : **One header** (8 bytes) fo
  * **Version** : 1 byte (0 to 255)
  * **Mesh type** : 1 bit
  * **Indices types** : 1 bit
- * **Number of attributes per vertex** : 6 bits (0 to 63)
+ * **Endianness** : 1 bit
+ * **Number of attributes per vertex** : 5 bits (0 to 31)
  * **Number of values per attribute** : 3 bytes (0 to 16777215)
  * **Number of elements** : 3 bytes (0 to 16777215)
 
@@ -35,6 +35,11 @@ A value of 0 should be treated as an error by the decoder.
 
  * **0** : Unsigned 16bit integer (2 bytes)
  * **1** : Unsigned 32bit integer (4 bytes)
+
+### Endianness
+
+ * **0** : Little Endian
+ * **1** : Big Endian
 
 ### Number of attributes per vertex
 
