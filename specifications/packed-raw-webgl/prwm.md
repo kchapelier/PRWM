@@ -1,4 +1,4 @@
-# Packed Raw WebGL Model (PRWM) Specifications (version 1 / draft 2017-05-14)
+# Packed Raw WebGL Model (PRWM) Specifications (version 1 / draft 2017-05-17)
 
  * All signed integer values are stored in two's complement format.
  * All float values are stored following the IEEE 754 spec.
@@ -8,7 +8,7 @@
  * The format prioritizes fast parsing over file weight.
  * The format is specifically designed for WebGL and will probably prove useless for any other platforms.
 
-The general structure of the file is the following : **One header** (8 bytes) followed by **one or more attribute blocks** (varying byte count) followed by **up to one indices block** (varying byte count).
+The general structure of the file is the following : **One header** (8 bytes) followed by **one or more attribute blocks** (varying byte count) followed by some padding and **up to one indices block** (varying byte count).
 
 ## Header
 
@@ -121,6 +121,13 @@ While not directly encoded in the attribute header, the total length of the attr
 
 
 
+## Padding
+
+Some padding should be added in such a way as to make the next position a multiple of 4.
+
+
+
+
 ## Indices block
 
 The content of this space is dependent on the `Mesh type`.
@@ -142,3 +149,4 @@ face1vert1index, face1vert2index, face1vert3index, face2vert1index, face2vert2in
 While not directly encoded in the block, the total length of the indices values can be obtain as such :
 
 `Indices values length = 3 * Number of elements * Indices type byte count`
+
