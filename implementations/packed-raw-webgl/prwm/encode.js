@@ -1,7 +1,6 @@
 "use strict";
 
 var MeshTypes = require('./mesh-types'),
-    AttributeTypes = require('./attribute-types'),
     isBigEndianPlatform = require('../utils/is-big-endian-platform');
 
 // match the TypedArray type with the value defined in the spec
@@ -26,18 +25,19 @@ var setMethods = {
 };
 
 function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, length, bigEndian) {
-    var writeArray = new sourceTypedArray.constructor(destinationArrayBuffer, position, length);
+    var writeArray = new sourceTypedArray.constructor(destinationArrayBuffer, position, length),
+        bytesPerElement = sourceTypedArray.BYTES_PER_ELEMENT;
 
-    if (bigEndian === isBigEndianPlatform() || sourceTypedArray.BYTES_PER_ELEMENT === 1) {
+    if (bigEndian === isBigEndianPlatform() || bytesPerElement === 1) {
         // desired endianness is the same as the platform, or the endianness doesn't matter (1 byte)
         writeArray.set(sourceTypedArray.subarray(0, length));
     } else {
-        var writeView = new DataView(destinationArrayBuffer, position, length * sourceTypedArray.BYTES_PER_ELEMENT);
-        var setMethod = setMethods[sourceTypedArray.constructor.name];
-        var bytesPerElement = sourceTypedArray.BYTES_PER_ELEMENT;
-        var littleEndian = !bigEndian;
+        var writeView = new DataView(destinationArrayBuffer, position, length * bytesPerElement),
+            setMethod = setMethods[sourceTypedArray.constructor.name],
+            littleEndian = !bigEndian,
+            i = 0;
 
-        for (var i = 0; i < length; i++) {
+        for (i = 0; i < length; i++) {
             writeView[setMethod](i * bytesPerElement, sourceTypedArray[i], littleEndian);
         }
     }
@@ -46,11 +46,8 @@ function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, lengt
 }
 
 function encode (meshType, attributes, indices, bigEndian) {
-    var attributeKeys = Object.keys(attributes);
-    var valuesNumber = (attributes[attributeKeys[0]].values.length / attributes[attributeKeys[0]].cardinality) | 0;
-    var isTriangleMesh = meshType === MeshTypes.TriangleMesh;
-    var elementNumber = isTriangleMesh ? indices.length / 3 | 0 : valuesNumber;
-    var indicesType = !isTriangleMesh || indices.constructor.name === 'Uint16Array' ? 0 : 1;
+    var attributeKeys = Object.keys(attributes),
+        isTriangleMesh = meshType === MeshTypes.TriangleMesh;
 
     /** PRELIMINARY CHECKS **/
 
@@ -68,14 +65,24 @@ function encode (meshType, attributes, indices, bigEndian) {
         throw new Error('PRWM encoder: The indices must be represented as an Uint16Array or an Uint32Array');
     }
 
+    /** GET THE TYPE OF INDICES AS WELL AS THE NUMBER OF ELEMENTS AND ATTR VALUES **/
+
+    var valuesNumber = attributes[attributeKeys[0]].values.length / attributes[attributeKeys[0]].cardinality | 0,
+        elementNumber = isTriangleMesh ? indices.length / 3 | 0 : valuesNumber,
+        indicesType = !isTriangleMesh || indices.constructor.name === 'Uint16Array' ? 0 : 1;
+
     /** GET THE FILE LENGTH **/
 
-    var totalLength = 8;
+    var totalLength = 8,
+        attributeKey,
+        attribute,
+        attributeLength,
+        i, j;
 
-    for (var i = 0; i < attributeKeys.length; i++) {
-        var attributeKey = attributeKeys[i];
-        var attribute = attributes[attributeKey];
-        var attributeLength = attributeKey.length + 2; // NUL byte + flag byte
+    for (i = 0; i < attributeKeys.length; i++) {
+        attributeKey = attributeKeys[i];
+        attribute = attributes[attributeKey];
+        attributeLength = attributeKey.length + 2; // NUL byte + flag byte
         attributeLength = Math.ceil(attributeLength / 4) * 4 + attribute.values.byteLength;
         totalLength += attributeLength;
     }
@@ -85,6 +92,8 @@ function encode (meshType, attributes, indices, bigEndian) {
     if (isTriangleMesh) {
         totalLength += indices.byteLength;
     }
+
+    /** INITIALIZE THE BUFFER */
 
     var buffer = new ArrayBuffer(totalLength),
         array = new Uint8Array(buffer);
@@ -122,13 +131,13 @@ function encode (meshType, attributes, indices, bigEndian) {
 
     /** ATTRIBUTES **/
 
-    for (var i = 0; i < attributeKeys.length; i++) {
-        var attributeKey = attributeKeys[i];
-        var attribute = attributes[attributeKey];
+    for (i = 0; i < attributeKeys.length; i++) {
+        attributeKey = attributeKeys[i];
+        attribute = attributes[attributeKey];
 
         /*** WRITE ATTRIBUTE HEADER ***/
 
-        for (var j = 0; j < attributeKey.length; j++, pos++) {
+        for (j = 0; j < attributeKey.length; j++, pos++) {
             array[pos] = (attributeKey.charCodeAt(j) & 0x7F) || 0x5F; // default to underscore
         }
 
@@ -160,7 +169,6 @@ function encode (meshType, attributes, indices, bigEndian) {
     if (isTriangleMesh) {
         copyToBuffer(indices, buffer, pos, elementNumber * 3, bigEndian);
     }
-
 
     return buffer;
 }

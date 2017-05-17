@@ -1,7 +1,6 @@
 "use strict";
 
 var MeshTypes = require('./mesh-types'),
-    AttributeTypes = require('./attribute-types'),
     isBigEndianPlatform = require('../utils/is-big-endian-platform');
 
 // match the values defined in the spec to the TypedArray types
@@ -30,16 +29,17 @@ var getMethods = {
 };
 
 function copyFromBuffer (sourceArrayBuffer, viewType, position, length, fromBigEndian) {
-    var bytesPerElement = viewType.BYTES_PER_ELEMENT;
-    var result;
+    var bytesPerElement = viewType.BYTES_PER_ELEMENT,
+        result;
 
     if (fromBigEndian === isBigEndianPlatform() || bytesPerElement === 1) {
         result = new viewType(sourceArrayBuffer, position, length);
     } else {
+        var readView = new DataView(sourceArrayBuffer, position, length * bytesPerElement),
+            getMethod = getMethods[viewType.name],
+            littleEndian = !fromBigEndian;
+
         result = new viewType(length);
-        var readView = new DataView(sourceArrayBuffer, position, length * bytesPerElement);
-        var getMethod = getMethods[viewType.name];
-        var littleEndian = !fromBigEndian;
 
         for (var i = 0; i < length; i++) {
             result[i] = readView[getMethod](i * bytesPerElement, littleEndian);
@@ -50,20 +50,16 @@ function copyFromBuffer (sourceArrayBuffer, viewType, position, length, fromBigE
 }
 
 function decode (buffer) {
-    var array = new Uint8Array(buffer);
-
-    var version = array[0];
-
-    var flags = array[1];
-
-    var meshType = flags >> 7 & 0x01;
-    var isTriangleMesh = meshType === MeshTypes.TriangleMesh;
-    var indicesType = flags >> 6 & 0x01;
-    var bigEndian = (flags >> 5 & 0x01) === 1;
-    var attributesNumber = flags & 0x1F;
-
-    var valuesNumber = 0;
-    var elementNumber = 0;
+    var array = new Uint8Array(buffer),
+        version = array[0],
+        flags = array[1],
+        meshType = flags >> 7 & 0x01,
+        isTriangleMesh = meshType === MeshTypes.TriangleMesh,
+        indicesType = flags >> 6 & 0x01,
+        bigEndian = (flags >> 5 & 0x01) === 1,
+        attributesNumber = flags & 0x1F,
+        valuesNumber = 0,
+        elementNumber = 0;
 
     if (bigEndian) {
         valuesNumber = (array[2] << 16) + (array[3] << 8) + array[4];
@@ -75,11 +71,19 @@ function decode (buffer) {
 
     var pos = 8;
 
-    var attributes = {};
+    var attributes = {},
+        attributeName,
+        char,
+        attributeType,
+        cardinality,
+        encodingType,
+        arrayType,
+        values,
+        i;
 
-    for (var i = 0; i < attributesNumber; i++) {
-        var char;
-        var attributeName = '';
+    for (i = 0; i < attributesNumber; i++) {
+        attributeName = '';
+
         while (pos < array.length) {
             char = array[pos];
             pos++;
@@ -91,19 +95,19 @@ function decode (buffer) {
             }
         }
 
-        var flags = array[pos];
+        flags = array[pos];
 
-        var attributeType = flags >> 6 & 0x03;
-        var cardinality = (flags >> 4 & 0x03) + 1;
-        var encodingType = flags & 0x0F;
-        var arrayType = InvertedEncodingTypes[encodingType];
+        attributeType = flags >> 6 & 0x03;
+        cardinality = (flags >> 4 & 0x03) + 1;
+        encodingType = flags & 0x0F;
+        arrayType = InvertedEncodingTypes[encodingType];
 
         pos++;
 
         // padding to next multiple of 4
         pos = Math.ceil(pos / 4) * 4;
 
-        var values = copyFromBuffer(buffer, arrayType, pos, cardinality * valuesNumber, bigEndian);
+        values = copyFromBuffer(buffer, arrayType, pos, cardinality * valuesNumber, bigEndian);
 
         pos+= arrayType.BYTES_PER_ELEMENT * cardinality * valuesNumber;
 
@@ -129,7 +133,7 @@ function decode (buffer) {
     } else {
         indices = new (elementNumber > 0xFFFF ? Uint32Array : Uint16Array)(elementNumber);
 
-        for (var i = 0; i < elementNumber; i++) {
+        for (i = 0; i < elementNumber; i++) {
             indices[i] = i;
         }
     }
