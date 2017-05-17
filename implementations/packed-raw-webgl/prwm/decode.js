@@ -57,6 +57,7 @@ function decode (buffer) {
     var flags = array[1];
 
     var meshType = flags >> 7 & 0x01;
+    var isTriangleMesh = meshType === MeshTypes.TriangleMesh;
     var indicesType = flags >> 6 & 0x01;
     var bigEndian = (flags >> 5 & 0x01) === 1;
     var attributesNumber = flags & 0x1F;
@@ -117,12 +118,12 @@ function decode (buffer) {
 
     var indices;
 
-    if (meshType === MeshTypes.TriangleMesh) {
+    if (isTriangleMesh) {
         indices = copyFromBuffer(
             buffer,
             indicesType === 1 ? Uint32Array : Uint16Array,
             pos,
-            elementNumber * (meshType === MeshTypes.TriangleMesh ? 3 : 1),
+            elementNumber * 3,
             bigEndian
         );
     } else {

@@ -48,8 +48,9 @@ function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, lengt
 function encode (meshType, attributes, indices, bigEndian) {
     var attributeKeys = Object.keys(attributes);
     var valuesNumber = (attributes[attributeKeys[0]].values.length / attributes[attributeKeys[0]].cardinality) | 0;
-    var elementNumber = meshType === MeshTypes.TriangleMesh ? indices.length / 3 | 0 : valuesNumber;
-    var indicesType = indices.constructor.name === 'Uint16Array' ? 0 : 1;
+    var isTriangleMesh = meshType === MeshTypes.TriangleMesh;
+    var elementNumber = isTriangleMesh ? indices.length / 3 | 0 : valuesNumber;
+    var indicesType = !isTriangleMesh || indices.constructor.name === 'Uint16Array' ? 0 : 1;
 
     /** PRELIMINARY CHECKS **/
 
@@ -63,7 +64,7 @@ function encode (meshType, attributes, indices, bigEndian) {
         throw new Error('PRWM encoder: The model must have at least one attribute');
     }
 
-    if (meshType === MeshTypes.TriangleMesh && indices.constructor.name !== 'Uint16Array' && indices.constructor.name !== 'Uint32Array') {
+    if (isTriangleMesh && indices.constructor.name !== 'Uint16Array' && indices.constructor.name !== 'Uint32Array') {
         throw new Error('PRWM encoder: The indices must be represented as an Uint16Array or an Uint32Array');
     }
 
@@ -81,7 +82,7 @@ function encode (meshType, attributes, indices, bigEndian) {
 
     totalLength = Math.ceil(totalLength / 4) * 4;
 
-    if (meshType === MeshTypes.TriangleMesh) {
+    if (isTriangleMesh) {
         totalLength += indices.byteLength;
     }
 
@@ -156,8 +157,8 @@ function encode (meshType, attributes, indices, bigEndian) {
 
     pos = Math.ceil(pos / 4) * 4;
 
-    if (meshType === MeshTypes.TriangleMesh) {
-        copyToBuffer(indices, buffer, pos, elementNumber * (meshType === MeshTypes.TriangleMesh ? 3 : 1), bigEndian);
+    if (isTriangleMesh) {
+        copyToBuffer(indices, buffer, pos, elementNumber * 3, bigEndian);
     }
 
 
