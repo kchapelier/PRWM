@@ -75,7 +75,7 @@ function encode (meshType, attributes, indices, bigEndian) {
     for (var i = 0; i < attributeKeys.length; i++) {
         var attributeKey = attributeKeys[i];
         var attribute = attributes[attributeKey];
-        var attributeLength = attributeKey.length + 1;
+        var attributeLength = attributeKey.length + 2; // NUL byte + flag byte
         attributeLength = Math.ceil(attributeLength / 4) * 4 + attribute.values.byteLength;
         totalLength += attributeLength;
     }
