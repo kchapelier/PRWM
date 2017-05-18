@@ -2,49 +2,48 @@
 
 var prwm = require('../prwm/index');
 
-var PRWMLoader = function PRWMLoader (manager) {
-    //this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+THREE.PRWMLoader = function PRWMLoader (manager) {
+    this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
 };
 
-PRWMLoader.prototype = {
-    constructor: PRWMLoader,
+THREE.PRWMLoader.prototype = {
+
+    constructor: THREE.PRWMLoader,
+
     load: function ( url, onLoad, onProgress, onError ) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.responseType = 'arraybuffer';
 
+        var scope = this;
 
-        /*
-        var loader = new THREE.FileLoader( this.manager );
+        var loader = new THREE.FileLoader( scope.manager );
         loader.setResponseType( 'arraybuffer' );
-        loader.load( url, function ( buffer ) {
+        loader.load( url, function ( arrayBuffer ) {
+            onLoad( scope.parse( arrayBuffer ) );
+        }, onProgress, onError );
 
-        });
-        */
+    },
 
-        xhr.onload = function (e) {
-            if (this.readyState === 4) {
-                console.time('PRWMLoader');
-                var data = prwm.decodePrwm(this.response),
-                    attributesKey = Object.keys(data.attributes),
-                    bufferGeometry = new THREE.BufferGeometry(),
-                    attribute,
-                    i;
+    parse: function ( arrayBuffer ) {
+        console.time('PRWMLoader');
 
-                for (i = 0; i < attributesKey.length; i++) {
-                    attribute = data.attributes[attributesKey[i]];
-                    bufferGeometry.addAttribute(attributesKey[i], new THREE.BufferAttribute(attribute.values, attribute.cardinality));
-                }
+        var data = prwm.decodePrwm(arrayBuffer),
+            attributesKey = Object.keys(data.attributes),
+            bufferGeometry = new THREE.BufferGeometry(),
+            attribute,
+            i;
 
-                bufferGeometry.setIndex(new THREE.BufferAttribute(data.indices, 1));
-                console.timeEnd('PRWMLoader');
+        for (i = 0; i < attributesKey.length; i++) {
+            attribute = data.attributes[attributesKey[i]];
+            bufferGeometry.addAttribute(attributesKey[i], new THREE.BufferAttribute(attribute.values, attribute.cardinality));
+        }
 
-                onLoad(bufferGeometry);
-            }
-        };
+        bufferGeometry.setIndex(new THREE.BufferAttribute(data.indices, 1));
 
-        xhr.send(null);
+        console.timeEnd('PRWMLoader');
+
+        return bufferGeometry;
     }
 };
 
-module.exports = PRWMLoader;
+THREE.PRWMLoader.isBigEndianPlatform = function () {
+    return prwm.isBigEndianPlatform();
+};
