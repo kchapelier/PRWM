@@ -12,5 +12,7 @@ for any other platforms.
 
 The aim of this specification is to come up with a compact and flexible format for static nD models.
 
+This one is still pretty much vaporware.
+
  * [Variable Precision Model (VPRM)](https://github.com/kchapelier/experimental-file-formats/blob/master/specifications/variable-precision/vprm.md)
  * [Variable Precision Bundle (VPRB)](https://github.com/kchapelier/experimental-file-formats/blob/master/specifications/variable-precision/vprb.md)

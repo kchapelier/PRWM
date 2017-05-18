@@ -11,7 +11,8 @@ var smoothNefertitiData = require('./json/smooth-nefertiti.json'),
 
 function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEndian, path) {
 
-    var attributes = {};
+    var attributes = {},
+        nbVertices = 0;
 
     if (positionsType) {
         attributes['position'] = {
@@ -19,6 +20,7 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
             cardinality: 3,
             values: new positionsType(data.vertices)
         };
+        nbVertices = Math.max(nbVertices, data.vertices.length / 3);
     }
 
     if (normalsType) {
@@ -27,6 +29,7 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
             cardinality: 3,
             values: new normalsType(data.normals)
         };
+        nbVertices = Math.max(nbVertices, data.normals.length / 3);
     }
 
     if (uvsType) {
@@ -35,12 +38,13 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
             cardinality: 2,
             values: new uvsType(data.uvs)
         };
+        nbVertices = Math.max(nbVertices, data.uvs.length / 2);
     }
 
     var arrayBuffer = prwm.encodePrwm(
         meshType,
         attributes,
-        new Uint16Array(data.indices), //TODO should be Uint32 for suzannes
+        new (nbVertices > 0xFFFF ? Uint32Array : Uint16Array)(data.indices),
         bigEndian
     );
 
