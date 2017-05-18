@@ -1,7 +1,7 @@
 "use strict";
 
-var fs = require('fs');
-var prwm = require('../implementations/packed-raw-webgl/index');
+var fs = require('fs'),
+    prwm = require('../implementations/packed-raw-webgl/prwm/index');
 
 var smoothNefertitiData = require('./json/smooth-nefertiti.json'),
     facetedNefertitiData = require('./json/faceted-nefertiti.json'),
@@ -14,7 +14,7 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
     var attributes = {};
 
     if (positionsType) {
-        attributes['positions'] = {
+        attributes['position'] = {
             type: prwm.AttributeTypes.Float,
             cardinality: 3,
             values: new positionsType(data.vertices)
@@ -22,7 +22,7 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
     }
 
     if (normalsType) {
-        attributes['normals'] = {
+        attributes['normal'] = {
             type: prwm.AttributeTypes.Float,
             cardinality: 3,
             values: new normalsType(data.normals)
@@ -30,7 +30,7 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
     }
 
     if (uvsType) {
-        attributes['uvs'] = {
+        attributes['uv'] = {
             type: prwm.AttributeTypes.Float,
             cardinality: 2,
             values: new uvsType(data.uvs)
@@ -40,7 +40,7 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
     var arrayBuffer = prwm.encodePrwm(
         meshType,
         attributes,
-        new Uint16Array(data.indices),
+        new Uint16Array(data.indices), //TODO should be Uint32 for suzannes
         bigEndian
     );
 
