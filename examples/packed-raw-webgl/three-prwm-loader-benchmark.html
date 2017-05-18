@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            html, body {
+                padding:0;
+                margin:0;
+            }
+
+            body {
+                padding:20px;
+            }
+
+            #times {
+                font-family:Lucida Console, Bitstream Vera Sans Mono, monospace;
+            }
+
+            #times p {
+                display:block;
+                margin:4px 0;
+                padding:0;
+            }
+
+            #times span {
+                display:inline-block;
+                min-width:200px;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.js"></script>
+        <script src="../js/THREE.OBJLoader.js"></script>
+        <script src="../js/inflate.min.js"></script>
+        <script src="../js/THREE.FBXLoader.js"></script>
+        <script src="../js/THREE.DumbJsonLoader.js"></script>
+        <script src="../../implementations/packed-raw-webgl/three-prwm-loader/build/PRWMLoader.dev.js"></script>
+    </head>
+    <body>
+        <p>The following times only account for the actual parsing time. <br/>It does not include the download.</p>
+        <p>DumbJSONLoader is a custom simplified JSON loader for THREE.js I've been using.</p>
+        <div id="times">
+
+        </div>
+        <script>
+            /* Hijacking console.time and console.timeEnd, eh, don't do that in production code... */
+
+            var oldConsoleTime = console.time;
+            var oldConsoleTimeEnd = console.timeEnd;
+            var timesContainer = document.getElementById('times');
+            var consoleTimeData = {};
+
+            console.time = function (name) {
+                consoleTimeData[name] = performance.now();
+            };
+
+            console.timeEnd = function (name) {
+                displayTime(name, performance.now() - consoleTimeData[name]);
+            };
+
+            function clearTimes () {
+                timesContainer.innerHTML = '';
+            }
+
+            function displayTime (name, time) {
+                timesContainer.innerHTML += '<p><span>' + name + ':</span><span>' + time.toFixed(2) + 'ms</span></p>';
+            }
+
+        </script>
+        <script>
+            var objLoader = new THREE.OBJLoader();
+            var fbxLoader = new THREE.FBXLoader();
+            var prwmLoader = new THREE.PRWMLoader();
+            var jsonLoader = new THREE.DumbJSONLoader();
+
+            function loadFiles () {
+                objLoader.load('../../models/ascii-obj/faceted-nefertiti.obj', function (geometry) {
+                    console.log(geometry);
+                });
+
+                fbxLoader.load('../../models/binary-fbx/faceted-nefertiti.fbx', function (geometry) {
+                    console.log(geometry);
+                });
+
+                jsonLoader.load('../../models/json/faceted-nefertiti.json', function (geometry) {
+                    console.log(geometry);
+                });
+
+                prwmLoader.load('../../models/prwm/faceted-nefertiti-LE.prwm', function (geometry) {
+                    console.log(geometry);
+                });
+            }
+
+            loadFiles();
+        </script>
+    </body>
+</html>
