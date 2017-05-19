@@ -1,3 +1,7 @@
+/**
+ * @author Kevin Chapelier / https://github.com/kchapelier
+ */
+
 ( function ( THREE ) {
 
 	"use strict";

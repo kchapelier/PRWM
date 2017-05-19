@@ -28,6 +28,7 @@
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.js"></script>
         <script src="../js/THREE.OBJLoader.js"></script>
+        <script src="../js/THREE.OBJLoader2.js"></script>
         <script src="../js/inflate.min.js"></script>
         <script src="../js/THREE.FBXLoader.js"></script>
         <script src="../js/THREE.DumbJsonLoader.js"></script>
@@ -66,6 +67,7 @@
         </script>
         <script>
             var objLoader = new THREE.OBJLoader();
+            var objLoader2 = new THREE.OBJLoader2();
             var fbxLoader = new THREE.FBXLoader();
             var prwmLoader = new THREE.PRWMLoader();
             var jsonLoader = new THREE.DumbJSONLoader();
@@ -74,6 +76,10 @@
                 objLoader.load('../../models/ascii-obj/faceted-nefertiti.obj', function (geometry) {
                     console.log(geometry);
                 });
+
+                objLoader2.load('../../models/ascii-obj/faceted-nefertiti.obj', function (geometry) {
+                    console.log(geometry);
+                }, null, null, true);
 
                 fbxLoader.load('../../models/binary-fbx/faceted-nefertiti.fbx', function (geometry) {
                     console.log(geometry);
