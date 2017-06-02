@@ -1,24 +1,28 @@
-# Packed Raw WebGL Model (PRWM) Specifications (version 1 / draft 2017-05-17)
+# Packed Raw WebGL Model (PRWM) Specifications (version 1 / rc 2017-06-02)
+
+## Conventions
 
  * All signed integer values are stored in two's complement format.
  * All float values are stored following the IEEE 754 spec.
- * The format supports two main types of geometries : point clouds and triangle meshes.
+ * The format supports indexed and non-indexed geometries.
  * The format is designed to allow any number of custom attributes and doesn't force the use of any pre-defined attributes.
  * The format doesn't support any type of bone-based animations, morphing is achievable with custom attributes.
  * The format prioritizes fast parsing over file weight.
  * The format is specifically designed for WebGL and will probably prove useless for any other platforms.
 
-The general structure of the file is the following : **One header** (8 bytes) followed by **one or more attribute blocks** (varying byte count) followed by some padding and **up to one indices block** (varying byte count).
+The general structure of the file is the following : **One header** (8 bytes) followed by **one or more attribute
+blocks** (varying byte count) followed by some padding and, in the case of an indexed geometry, **up to one indices
+block** (varying byte count).
 
 ## Header
 
  * **Version** : 1 byte (0 to 255)
- * **Mesh type** : 1 bit
- * **Indices types** : 1 bit
+ * **Indexed geometry** : 1 bit
+ * **Indices type** : 1 bit
  * **Endianness** : 1 bit
  * **Number of attributes per vertex** : 5 bits (0 to 31)
  * **Number of values per attribute** : 3 bytes (0 to 16777215)
- * **Number of elements** : 3 bytes (0 to 16777215)
+ * **Number of indices** : 3 bytes (0 to 16777215)
 
 ### Version
 
@@ -26,15 +30,17 @@ Indicates the version of the specification to apply while decoding this model.
 
 A value of 0 should be treated as an error by the decoder.
 
-### Mesh type
+### Indexed Geometry
 
- * **0** : Point cloud
- * **1** : Triangle mesh
+ * **0** : Non-indexed geometry
+ * **1** : Indexed geometry
 
-### Indices types
+### Indices type
 
  * **0** : Unsigned 16bit integer (2 bytes)
  * **1** : Unsigned 32bit integer (4 bytes)
+
+This should be set to 0 for non-indexed geometries, a value of 1 should be treated as an error by the decoder.
 
 ### Endianness
 
@@ -47,16 +53,17 @@ Indicates the number of attributes per vertex.
 
 A value of 0 should be treated as an error by the decoder.
 
-It should be noted that most OpenGL implementations are currently limited to 16 attributes per vertex.
+It should be noted that most WebGL implementations are currently limited to 16 attributes per vertex.
 
 #### Number of values per attribute
 
 Indicates the number of values per attribute.
 
-#### Number of elements
+#### Number of indices
 
-Indicates the number of elements. The number of points in point cloud and the number of triangles in triangle mesh.
+The number of indices stored in the index block.
 
+This should be set to 0 for non-indexed geometries, any other value should be treated as an error by the decoder.
 
 
 
@@ -121,32 +128,13 @@ While not directly encoded in the attribute header, the total length of the attr
 
 
 
-## Padding
-
-Some padding should be added in such a way as to make the next position a multiple of 4.
-
-
-
-
 ## Indices block
 
-The content of this space is dependent on the `Mesh type`.
+This block should only be present for indexed geometries.
 
-### Point clouds
-
-Each group of attributes are interpreted as a single point, no indices are needed.
-
-The presence of an Indexes block for point clouds with one index per vertex should be treated as an error by the decoder.
-
-### Triangle meshes
-
-The indexes are ordered by face and by vertex as such :
-
-```
-face1vert1index, face1vert2index, face1vert3index, face2vert1index, face2vert2index, face2vert3index, ...
-```
+It should start with some padding to align the values on position which is a multiple of 4, if needed.
 
 While not directly encoded in the block, the total length of the indices values can be obtain as such :
 
-`Indices values length = 3 * Number of elements * Indices type byte count`
+`Indices values length = Number of indices * Indices type byte count`
 
