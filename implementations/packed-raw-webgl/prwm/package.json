@@ -5,9 +5,14 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "test": "mocha test/",
     "build-dev": "browserify ./index.js -d --s prwm > ./build/prwm.dev.js",
     "build-min": "browserify ./index.js --s prwm | uglifyjs > ./build/prwm.min.js"
   },
   "author": "Kevin Chapelier",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.0.1",
+    "mocha": "^3.4.2"
+  }
 }

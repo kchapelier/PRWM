@@ -86,7 +86,7 @@ This should be set to 0 for non-indexed geometries, any other value should be tr
 
 #### Cardinality
 
-Indicates the number of elements per value. O is scalar, 1 is a 2d vector, 2 is a 3d vector and 3 a 4d vector.
+Indicates the number of elements per value. 0 is scalar, 1 is a 2d vector, 2 is a 3d vector and 3 a 4d vector.
 
 Some examples  :
 

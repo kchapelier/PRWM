@@ -23,8 +23,7 @@ var getMethods = {
     Uint32Array: 'getUint32',
     Int16Array: 'getInt16',
     Int32Array: 'getInt32',
-    Float32Array: 'getFloat32',
-    Float64Array: 'getFloat64'
+    Float32Array: 'getFloat32'
 };
 
 function copyFromBuffer (sourceArrayBuffer, viewType, position, length, fromBigEndian) {

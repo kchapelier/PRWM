@@ -41,7 +41,7 @@ function saveAsPRWM (data, positionsType, normalsType, uvsType, bigEndian, path)
         nbVertices = Math.max(nbVertices, data.uvs.length / 2);
     }
 
-    var arrayBuffer = prwm.encodePrwm(
+    var arrayBuffer = prwm.encode(
         attributes,
         new (nbVertices > 0xFFFF ? Uint32Array : Uint16Array)(data.indices),
         bigEndian

@@ -20,8 +20,7 @@ var setMethods = {
     Uint32Array: 'setUint32',
     Int16Array: 'setInt16',
     Int32Array: 'setInt32',
-    Float32Array: 'setFloat32',
-    Float64Array: 'setFloat64'
+    Float32Array: 'setFloat32'
 };
 
 function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, bigEndian) {
@@ -48,7 +47,7 @@ function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, bigEn
 }
 
 function encode (attributes, indices, bigEndian) {
-    var attributeKeys = Object.keys(attributes),
+    var attributeKeys = attributes ? Object.keys(attributes) : [],
         indexedGeometry = !!indices;
 
     /** PRELIMINARY CHECKS **/
@@ -57,6 +56,16 @@ function encode (attributes, indices, bigEndian) {
 
     if (attributeKeys.length === 0) {
         throw new Error('PRWM encoder: The model must have at least one attribute');
+    }
+
+    if (attributeKeys.length > 31) {
+        throw new Error('PRWM encoder: The model can have at most 31 attributes');
+    }
+
+    for (var i = 0; i < attributeKeys.length; i++) {
+        if (!EncodingTypes.hasOwnProperty(attributes[attributeKeys[i]].values.constructor.name)) {
+            throw new Error('PRWM encoder: Unsupported attribute values type: ' + attributes[attributeKeys[i]].values.constructor.name);
+        }
     }
 
     if (indexedGeometry && indices.constructor.name !== 'Uint16Array' && indices.constructor.name !== 'Uint32Array') {
