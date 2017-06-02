@@ -30,11 +30,6 @@
 
 	}
 
-	var MeshTypes = {
-		PointCloud: 0,
-		TriangleMesh: 1
-	};
-
 	// match the values defined in the spec to the TypedArray types
 	var InvertedEncodingTypes = [
 		null,
@@ -97,23 +92,22 @@
 		var array = new Uint8Array( buffer ),
 			version = array[ 0 ],
 			flags = array[ 1 ],
-			meshType = flags >> 7 & 0x01,
-			isTriangleMesh = meshType === MeshTypes.TriangleMesh,
+			indexedGeometry = !!(flags >> 7 & 0x01),
 			indicesType = flags >> 6 & 0x01,
 			bigEndian = ( flags >> 5 & 0x01 ) === 1,
 			attributesNumber = flags & 0x1F,
 			valuesNumber = 0,
-			elementNumber = 0;
+			indicesNumber = 0;
 
 		if ( bigEndian ) {
 
 			valuesNumber = ( array[ 2 ] << 16 ) + ( array[ 3 ] << 8 ) + array[ 4 ];
-			elementNumber = ( array[ 5 ] << 16 ) + ( array[ 6 ] << 8 ) + array[ 7 ];
+			indicesNumber = ( array[ 5 ] << 16 ) + ( array[ 6 ] << 8 ) + array[ 7 ];
 
 		} else {
 
 			valuesNumber = array[ 2 ] + ( array[ 3 ] << 8 ) + ( array[ 4 ] << 16 );
-			elementNumber = array[ 5 ] + ( array[ 6 ] << 8 ) + ( array[ 7 ] << 16 );
+			indicesNumber = array[ 5 ] + ( array[ 6 ] << 8 ) + ( array[ 7 ] << 16 );
 
 		}
 
@@ -177,32 +171,22 @@
 
 		pos = Math.ceil( pos / 4 ) * 4;
 
-		if ( isTriangleMesh ) {
+		indices = null;
+
+		if ( indexedGeometry ) {
 
 			indices = copyFromBuffer(
 				buffer,
 				indicesType === 1 ? Uint32Array : Uint16Array,
 				pos,
-				elementNumber * 3,
+				indicesNumber,
 				bigEndian
 			);
-
-		} else {
-
-			indices = new ( elementNumber > 0xFFFF ? Uint32Array : Uint16Array )( elementNumber );
-
-			for ( i = 0; i < elementNumber; i ++ ) {
-
-				indices[ i ] = i;
-
-			}
 
 		}
 
 		return {
 			version: version,
-			meshType: meshType,
-			elements: elementNumber,
 			attributes: attributes,
 			indices: indices
 		};
@@ -253,7 +237,11 @@
 
 			}
 
-			bufferGeometry.setIndex( new THREE.BufferAttribute( data.indices, 1 ) );
+			if ( data.indices !== null ) {
+
+				bufferGeometry.setIndex( new THREE.BufferAttribute( data.indices, 1 ) );
+
+			}
 
 			console.timeEnd( 'PRWMLoader' );
 

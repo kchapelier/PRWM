@@ -9,7 +9,7 @@ var smoothNefertitiData = require('./json/smooth-nefertiti.json'),
     facetedSuzanneData = require('./json/faceted-heavy-suzanne.json'),
     cubeData = require('./json/cube.json');
 
-function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEndian, path) {
+function saveAsPRWM (data, positionsType, normalsType, uvsType, bigEndian, path) {
 
     var attributes = {},
         nbVertices = 0;
@@ -42,7 +42,6 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
     }
 
     var arrayBuffer = prwm.encodePrwm(
-        meshType,
         attributes,
         new (nbVertices > 0xFFFF ? Uint32Array : Uint16Array)(data.indices),
         bigEndian
@@ -51,13 +50,13 @@ function saveAsPRWM (data, meshType, positionsType, normalsType, uvsType, bigEnd
     fs.writeFileSync(__dirname + '/' + path, new Buffer(arrayBuffer), { flag: 'w' });
 }
 
-saveAsPRWM(smoothNefertitiData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, false, './prwm/smooth-nefertiti-LE.prwm');
-saveAsPRWM(smoothNefertitiData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, true, './prwm/smooth-nefertiti-BE.prwm');
-saveAsPRWM(facetedNefertitiData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, false, './prwm/faceted-nefertiti-LE.prwm');
-saveAsPRWM(facetedNefertitiData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, true, './prwm/faceted-nefertiti-BE.prwm');
-saveAsPRWM(smoothSuzanneData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, false, './prwm/smooth-heavy-suzanne-LE.prwm');
-saveAsPRWM(smoothSuzanneData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, true, './prwm/smooth-heavy-suzanne-BE.prwm');
-saveAsPRWM(facetedSuzanneData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, false, './prwm/faceted-heavy-suzanne-LE.prwm');
-saveAsPRWM(facetedSuzanneData, prwm.MeshTypes.TriangleMesh, Float32Array, Float32Array, null, true, './prwm/faceted-heavy-suzanne-BE.prwm');
-saveAsPRWM(cubeData, prwm.MeshTypes.TriangleMesh, Int8Array, Int8Array, Int8Array, false, './prwm/cube-LE.prwm');
-saveAsPRWM(cubeData, prwm.MeshTypes.TriangleMesh, Int8Array, Int8Array, Int8Array, true, './prwm/cube-BE.prwm');
+saveAsPRWM(smoothNefertitiData, Float32Array, Float32Array, null, false, './prwm/smooth-nefertiti-LE.prwm');
+saveAsPRWM(smoothNefertitiData, Float32Array, Float32Array, null, true, './prwm/smooth-nefertiti-BE.prwm');
+saveAsPRWM(facetedNefertitiData, Float32Array, Float32Array, null, false, './prwm/faceted-nefertiti-LE.prwm');
+saveAsPRWM(facetedNefertitiData, Float32Array, Float32Array, null, true, './prwm/faceted-nefertiti-BE.prwm');
+saveAsPRWM(smoothSuzanneData, Float32Array, Float32Array, null, false, './prwm/smooth-heavy-suzanne-LE.prwm');
+saveAsPRWM(smoothSuzanneData, Float32Array, Float32Array, null, true, './prwm/smooth-heavy-suzanne-BE.prwm');
+saveAsPRWM(facetedSuzanneData, Float32Array, Float32Array, null, false, './prwm/faceted-heavy-suzanne-LE.prwm');
+saveAsPRWM(facetedSuzanneData, Float32Array, Float32Array, null, true, './prwm/faceted-heavy-suzanne-BE.prwm');
+saveAsPRWM(cubeData, Int8Array, Int8Array, Int8Array, false, './prwm/cube-LE.prwm');
+saveAsPRWM(cubeData, Int8Array, Int8Array, Int8Array, true, './prwm/cube-BE.prwm');
