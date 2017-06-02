@@ -41,20 +41,17 @@ function displayBinary (buffer, binary) {
 var lib = require('./index');
 
 var arrayBuffer = lib.encodePrwm(
-    lib.MeshTypes.TriangleMesh,
     {
         abcde: {
-            type: lib.AttributeTypes.int,
             cardinality: 1,
-            values: new Uint16Array([0, 1, 3])
+            values: new Int16Array([0, 1, 3])
         },
         defgh: {
-            type: lib.AttributeTypes.uint,
             cardinality: 2,
             values: new Uint16Array([0, 1, 3, 7, 15, 14])
         }
     },
-    new Uint16Array([0,1,2,0,2,1]),
+    new Uint16Array([0,1,2,0,3,1]),
     true
 );
 

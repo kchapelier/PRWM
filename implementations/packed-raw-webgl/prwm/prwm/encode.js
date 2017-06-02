@@ -1,7 +1,7 @@
 "use strict";
 
-var MeshTypes = require('./mesh-types'),
-    isBigEndianPlatform = require('../utils/is-big-endian-platform');
+var isBigEndianPlatform = require('../utils/is-big-endian-platform'),
+    inferAttributeType = require('../utils/infer-attribute-type');
 
 // match the TypedArray type with the value defined in the spec
 var EncodingTypes = {
@@ -24,9 +24,11 @@ var setMethods = {
     Float64Array: 'setFloat64'
 };
 
-function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, length, bigEndian) {
-    var writeArray = new sourceTypedArray.constructor(destinationArrayBuffer, position, length),
+function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, bigEndian) {
+    var length = sourceTypedArray.length,
         bytesPerElement = sourceTypedArray.BYTES_PER_ELEMENT;
+
+    var writeArray = new sourceTypedArray.constructor(destinationArrayBuffer, position, length);
 
     if (bigEndian === isBigEndianPlatform() || bytesPerElement === 1) {
         // desired endianness is the same as the platform, or the endianness doesn't matter (1 byte)
@@ -45,51 +47,46 @@ function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, lengt
     return writeArray;
 }
 
-function encode (meshType, attributes, indices, bigEndian) {
+function encode (attributes, indices, bigEndian) {
     var attributeKeys = Object.keys(attributes),
-        isTriangleMesh = meshType === MeshTypes.TriangleMesh;
+        indexedGeometry = !!indices;
 
     /** PRELIMINARY CHECKS **/
 
     // this is not supposed to catch all the possible errors, only some of the gotchas
 
-    if (meshType < 0 || meshType > 1) {
-        throw new Error('PRWM encoder: Incorrect mesh type');
-    }
-
     if (attributeKeys.length === 0) {
         throw new Error('PRWM encoder: The model must have at least one attribute');
     }
 
-    if (isTriangleMesh && indices.constructor.name !== 'Uint16Array' && indices.constructor.name !== 'Uint32Array') {
+    if (indexedGeometry && indices.constructor.name !== 'Uint16Array' && indices.constructor.name !== 'Uint32Array') {
         throw new Error('PRWM encoder: The indices must be represented as an Uint16Array or an Uint32Array');
     }
 
-    /** GET THE TYPE OF INDICES AS WELL AS THE NUMBER OF ELEMENTS AND ATTR VALUES **/
+    /** GET THE TYPE OF INDICES AS WELL AS THE NUMBER OF INDICES AND ATTRIBUTE VALUES **/
 
     var valuesNumber = attributes[attributeKeys[0]].values.length / attributes[attributeKeys[0]].cardinality | 0,
-        elementNumber = isTriangleMesh ? indices.length / 3 | 0 : valuesNumber,
-        indicesType = !isTriangleMesh || indices.constructor.name === 'Uint16Array' ? 0 : 1;
+        indicesNumber = indexedGeometry ? indices.length : 0,
+        indicesType = indexedGeometry && indices.constructor.name === 'Uint32Array' ? 1 : 0;
 
     /** GET THE FILE LENGTH **/
 
     var totalLength = 8,
         attributeKey,
         attribute,
-        attributeLength,
+        attributeType,
         i, j;
 
     for (i = 0; i < attributeKeys.length; i++) {
         attributeKey = attributeKeys[i];
         attribute = attributes[attributeKey];
-        attributeLength = attributeKey.length + 2; // NUL byte + flag byte
-        attributeLength = Math.ceil(attributeLength / 4) * 4 + attribute.values.byteLength;
-        totalLength += attributeLength;
+        totalLength += attributeKey.length + 2; // NUL byte + flag byte + padding
+        totalLength = Math.ceil(totalLength / 4) * 4; // padding
+        totalLength += attribute.values.byteLength;
     }
 
-    totalLength = Math.ceil(totalLength / 4) * 4;
-
-    if (isTriangleMesh) {
+    if (indexedGeometry) {
+        totalLength = Math.ceil(totalLength / 4) * 4;
         totalLength += indices.byteLength;
     }
 
@@ -102,7 +99,7 @@ function encode (meshType, attributes, indices, bigEndian) {
 
     array[0] = 1;
     array[1] = (
-        meshType << 7 |
+        indexedGeometry << 7 |
         indicesType << 6 |
         (bigEndian ? 1 : 0) << 5 |
         attributeKeys.length & 0x1F
@@ -113,17 +110,17 @@ function encode (meshType, attributes, indices, bigEndian) {
         array[3] = valuesNumber >> 8 & 0xFF;
         array[4] = valuesNumber & 0xFF;
 
-        array[5] = elementNumber >> 16 & 0xFF;
-        array[6] = elementNumber >> 8 & 0xFF;
-        array[7] = elementNumber & 0xFF;
+        array[5] = indicesNumber >> 16 & 0xFF;
+        array[6] = indicesNumber >> 8 & 0xFF;
+        array[7] = indicesNumber & 0xFF;
     } else {
         array[2] = valuesNumber & 0xFF;
         array[3] = valuesNumber >> 8 & 0xFF;
         array[4] = valuesNumber >> 16 & 0xFF;
 
-        array[5] = elementNumber & 0xFF;
-        array[6] = elementNumber >> 8 & 0xFF;
-        array[7] = elementNumber >> 16 & 0xFF;
+        array[5] = indicesNumber & 0xFF;
+        array[6] = indicesNumber >> 8 & 0xFF;
+        array[7] = indicesNumber >> 16 & 0xFF;
     }
 
 
@@ -134,6 +131,7 @@ function encode (meshType, attributes, indices, bigEndian) {
     for (i = 0; i < attributeKeys.length; i++) {
         attributeKey = attributeKeys[i];
         attribute = attributes[attributeKey];
+        attributeType = typeof attribute.type === 'undefined' ? inferAttributeType(attribute.values) : attribute.type;
 
         /*** WRITE ATTRIBUTE HEADER ***/
 
@@ -144,7 +142,7 @@ function encode (meshType, attributes, indices, bigEndian) {
         pos++;
 
         array[pos] = (
-            (attribute.type & 0x03) << 6 |
+            (attributeType & 0x03) << 6 |
             ((attribute.cardinality - 1) & 0x03) << 4 |
             EncodingTypes[attribute.values.constructor.name] & 0x0F
         );
@@ -157,17 +155,17 @@ function encode (meshType, attributes, indices, bigEndian) {
 
         /*** WRITE ATTRIBUTE VALUES ***/
 
-        var attributesWriteArray = copyToBuffer(attribute.values, buffer, pos, attribute.cardinality * valuesNumber, bigEndian);
+        var attributesWriteArray = copyToBuffer(attribute.values, buffer, pos, bigEndian);
 
         pos += attributesWriteArray.byteLength;
     }
 
     /*** WRITE INDICES VALUES ***/
 
-    pos = Math.ceil(pos / 4) * 4;
+    if (indexedGeometry) {
+        pos = Math.ceil(pos / 4) * 4;
 
-    if (isTriangleMesh) {
-        copyToBuffer(indices, buffer, pos, elementNumber * 3, bigEndian);
+        copyToBuffer(indices, buffer, pos, bigEndian);
     }
 
     return buffer;
