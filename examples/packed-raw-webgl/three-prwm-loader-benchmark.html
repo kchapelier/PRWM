@@ -32,7 +32,7 @@
         <script src="../js/inflate.min.js"></script>
         <script src="../js/THREE.FBXLoader.js"></script>
         <script src="../js/THREE.DumbJsonLoader.js"></script>
-        <script src="../../implementations/packed-raw-webgl/three-prwm-loader/build/PRWMLoader.dev.js"></script>
+        <script src="../../implementations/packed-raw-webgl/three-prwm-loader/PRWMLoader.js"></script>
     </head>
     <body>
         <p>The following times only account for the actual parsing time. <br/>It does not include the download.</p>
@@ -66,6 +66,7 @@
 
         </script>
         <script>
+            var noop = function () {};
             var objLoader = new THREE.OBJLoader();
             var objLoader2 = new THREE.OBJLoader2();
             var fbxLoader = new THREE.FBXLoader();
@@ -75,11 +76,11 @@
             function loadFiles () {
                 objLoader.load('../../models/ascii-obj/faceted-nefertiti.obj', function (geometry) {
                     console.log(geometry);
-                });
+                }, noop, noop);
 
                 objLoader2.load('../../models/ascii-obj/faceted-nefertiti.obj', function (geometry) {
                     console.log(geometry);
-                }, null, null, true);
+                }, noop, noop, true);
 
                 fbxLoader.load('../../models/binary-fbx/faceted-nefertiti.fbx', function (geometry) {
                     console.log(geometry);
