@@ -1,11 +1,32 @@
+#!/usr/bin/env node
+
 "use strict";
+
 var fs = require('fs'),
     objParser = require('wavefront-obj-parser'),
     prwm = require('../prwm/'),
-    argv = require('minimist')(process.argv.slice(2));
+    yargs = require('yargs');
 
-var inputPath = argv._[0],
-    outputPath = argv.o,
+
+var argv = yargs.usage('Usage: obj2prwm -i inputFile -o outputFile [options]')
+    .describe('i', 'Input file')
+    .alias('i', 'in')
+    .describe('o', 'Output file')
+    .alias('o', 'out')
+    .describe('positions', 'Include the vertices positions in output file')
+    .describe('uvs', 'Include the UV in output file')
+    .describe('normals', 'Include the normals in output file')
+    .describe('indexed', 'Whether the geometry should be indexed')
+    .describe('be', 'Write the output file in big endian')
+    .boolean(['uvs','positions','normals', 'indexed', 'be'])
+    .demandOption(['o', 'i'])
+    .help('h')
+    .alias('h', 'help')
+    .argv;
+
+var now = Date.now(),
+    inFd = fs.openSync(argv.in, 'r'),
+    outFd = fs.openSync(argv.out, 'w'),
     positions = !!argv.positions,
     uvs = !!argv.uvs,
     normals = !!argv.normals,
@@ -14,7 +35,7 @@ var inputPath = argv._[0],
 
 function serializeIndexed (objData, usePositions, useNormals, useUvs) {
     var nbPolygons = objData.vertexIndex.length / 4, // the parser always return indices by group of 4 to support quads
-        indicesMapping = [],
+        indicesMapping = {},
         indices = [],
         vertices = [],
         normals = [],
@@ -27,31 +48,22 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
         mapped,
         index;
 
+    var nextIndex = 0;
+
     for (i = 0; i < nbPolygons; i++) {
         for (k = 0; k < 3; k++) { // assume we don't have actual quads in the models
             vertexIndex = objData.vertexIndex[i * 4 + k];
             normalIndex = objData.normalIndex[i * 4 + k];
             uvIndex = objData.uvIndex[i * 4 + k];
 
-            mapped = ':';
+            mapped = (usePositions ? vertexIndex + ':' : ':') + (useNormals ? normalIndex + ':' : ':') + (useUvs ? uvIndex + ':' : ':');
 
-            if (usePositions) {
-                mapped += vertexIndex + ':';
-            }
+            index = indicesMapping[mapped];
 
-            if (useNormals) {
-                mapped += normalIndex + ':';
-            }
-
-            if (useUvs) {
-                mapped += uvIndex + ':';
-            }
-
-            index = indicesMapping.indexOf(mapped);
-
-            if (index === -1) {
-                index = indicesMapping.length;
-                indicesMapping.push(mapped);
+            if (typeof index === 'undefined') {
+                index = nextIndex;
+                indicesMapping[mapped] = index;
+                nextIndex++;
 
                 if (usePositions) {
                     vertices.push(
@@ -141,14 +153,17 @@ function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
     };
 }
 
-var objString = fs.readFileSync(inputPath, 'utf8');
+console.log(' * Reading ' + argv.in);
+var objString = fs.readFileSync(inFd, 'utf8');
 
+console.log(' * Parsing WaveFront OBJ data');
 var objData = objParser(objString);
 
+console.log(' * Formatting data');
 var serialized = indexed ? serializeIndexed(objData, positions, normals, uvs) : serializeNonIndexed(objData, positions, normals, uvs);
 
-var attributes = {};
-var nbVertices = 0;
+var attributes = {},
+    nbVertices = 0;
 
 if (positions) {
     attributes['position'] = { cardinality: 3, values: new Float32Array(serialized.vertices) };
@@ -171,5 +186,13 @@ var arrayBuffer = prwm.encode(
     bigEndian
 );
 
-fs.writeFileSync(outputPath, new Buffer(arrayBuffer), { flag: 'w' });
+console.log(' * Writing ' + argv.out);
+fs.writeFileSync(outFd, new Buffer(arrayBuffer), { flag: 'w' });
+console.log('');
+console.log('Operation completed in ' + ((Date.now() - now) / 1000).toFixed(2) + 's.');
+console.log('Original OBJ file size : ' + (Buffer.byteLength(objString, 'utf8') / 1024).toFixed(2) + 'kB');
+console.log('Generated ' + (indexed ? 'indexed' : 'non-indexed') + ' PRWM file size : ' + (arrayBuffer.byteLength / 1024).toFixed(2) + 'kB');
+console.log('Individual vertices : ' + nbVertices);
+console.log('');
+
 
