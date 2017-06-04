@@ -27,7 +27,19 @@ npm install obj2prwm -g
 
 ## Example
 
-```obj2prwm -i original.obj -o destination.prwm --positions --normals --uvs --indexed```
+```
+$ obj2prwm -i original.obj -o destination.prwm --positions --normals --uvs --indexed
+
+ * Reading original.obj
+ * Parsing WaveFront OBJ data
+ * Formatting data
+ * Writing destination.prwm
+
+Operation completed in 0.16s.
+Original OBJ file size : 1502.48kB
+Generated indexed PRWM file size : 386.42kB
+Individual vertices : 12147
+```
 
 ## Changelog
 
