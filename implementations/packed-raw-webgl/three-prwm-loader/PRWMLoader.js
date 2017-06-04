@@ -117,6 +117,7 @@
 			attributeName,
 			char,
 			attributeType,
+			attributeNormalized,
 			cardinality,
 			encodingType,
 			arrayType,
@@ -147,7 +148,8 @@
 
 			flags = array[ pos ];
 
-			attributeType = flags >> 6 & 0x03;
+			attributeType = flags >> 7 & 0x01;
+			attributeNormalized = !!(flags >> 6 & 0x01);
 			cardinality = ( flags >> 4 & 0x03 ) + 1;
 			encodingType = flags & 0x0F;
 			arrayType = InvertedEncodingTypes[ encodingType ];
@@ -239,7 +241,7 @@
 			for ( i = 0; i < attributesKey.length; i ++ ) {
 
 				attribute = data.attributes[ attributesKey[ i ] ];
-				bufferGeometry.addAttribute( attributesKey[ i ], new THREE.BufferAttribute( attribute.values, attribute.cardinality ) );
+				bufferGeometry.addAttribute( attributesKey[ i ], new THREE.BufferAttribute( attribute.values, attribute.cardinality, attribute.normalized ) );
 
 			}
 

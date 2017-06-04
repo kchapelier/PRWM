@@ -9,8 +9,7 @@ describe('AttributeTypes', function () {
     });
 
     it('should contain the values defined by the spec', function () {
-        lib.AttributeTypes.Int.should.equal(0);
-        lib.AttributeTypes.Uint.should.equal(1);
-        lib.AttributeTypes.Float.should.equal(2);
+        lib.AttributeTypes.Float.should.equal(0);
+        lib.AttributeTypes.Int.should.equal(1);
     });
 });

@@ -24,6 +24,7 @@ var bufferGeometryToPrwm = function bufferGeometryToPrwm (bufferGeometry, bigEnd
 
         attributes[attributeKeys[i]] = {
             cardinality: attribute.itemSize,
+            normalized: attribute.normalized,
             values: attribute.array
         };
     }

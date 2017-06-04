@@ -1,7 +1,7 @@
 "use strict";
 
 var isBigEndianPlatform = require('../utils/is-big-endian-platform'),
-    inferAttributeType = require('../utils/infer-attribute-type');
+    attributeTypes = require('./attribute-types');
 
 // match the TypedArray type with the value defined in the spec
 var EncodingTypes = {
@@ -48,7 +48,8 @@ function copyToBuffer (sourceTypedArray, destinationArrayBuffer, position, bigEn
 
 function encode (attributes, indices, bigEndian) {
     var attributeKeys = attributes ? Object.keys(attributes) : [],
-        indexedGeometry = !!indices;
+        indexedGeometry = !!indices,
+        i, j;
 
     /** PRELIMINARY CHECKS **/
 
@@ -62,7 +63,7 @@ function encode (attributes, indices, bigEndian) {
         throw new Error('PRWM encoder: The model can have at most 31 attributes');
     }
 
-    for (var i = 0; i < attributeKeys.length; i++) {
+    for (i = 0; i < attributeKeys.length; i++) {
         if (!EncodingTypes.hasOwnProperty(attributes[attributeKeys[i]].values.constructor.name)) {
             throw new Error('PRWM encoder: Unsupported attribute values type: ' + attributes[attributeKeys[i]].values.constructor.name);
         }
@@ -84,7 +85,7 @@ function encode (attributes, indices, bigEndian) {
         attributeKey,
         attribute,
         attributeType,
-        i, j;
+        attributeNormalized;
 
     for (i = 0; i < attributeKeys.length; i++) {
         attributeKey = attributeKeys[i];
@@ -140,7 +141,8 @@ function encode (attributes, indices, bigEndian) {
     for (i = 0; i < attributeKeys.length; i++) {
         attributeKey = attributeKeys[i];
         attribute = attributes[attributeKey];
-        attributeType = typeof attribute.type === 'undefined' ? inferAttributeType(attribute.values) : attribute.type;
+        attributeType = typeof attribute.type === 'undefined' ? attributeTypes.Float : attribute.type;
+        attributeNormalized = (!!attribute.normalized ? 1 : 0);
 
         /*** WRITE ATTRIBUTE HEADER ***/
 
@@ -151,7 +153,8 @@ function encode (attributes, indices, bigEndian) {
         pos++;
 
         array[pos] = (
-            (attributeType & 0x03) << 6 |
+            attributeType << 7 |
+            attributeNormalized << 6 |
             ((attribute.cardinality - 1) & 0x03) << 4 |
             EncodingTypes[attribute.values.constructor.name] & 0x0F
         );

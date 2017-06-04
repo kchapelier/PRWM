@@ -72,17 +72,23 @@ This should be set to 0 for non-indexed geometries, any other value should be tr
 ### Attribute header
 
  * **Name** : An ASCII encoded C-string (one byte per character, terminated with a NUL character)
- * **Type** : 2 bits (0 to 3)
+ * **Type** : 1 bit
+ * **Normalized** : 1 bit
  * **Cardinality** : 2 bits (0 to 3)
  * **Encoding type** : 4 bits (0 to 15)
  * **Padding** : 0 to 3 bytes
 
 #### Type
 
- * **0** : Signed Integer
- * **1** : Unsigned integer
- * **2** : Single-precision float
- * **3** : Reserved
+ * **0** : Float (should declare the attribute with vertexAttribPointer)
+ * **1** : Integer (should declare the attribute with vertexAttribIPointer, if supported)
+
+#### Normalized
+
+ * **0** : The attribute is not to be normalized.
+ * **1** : The attribute should be normalized (see [vertexAttribPointer](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer)).
+
+This only affects attributes typed as floats.
 
 #### Cardinality
 

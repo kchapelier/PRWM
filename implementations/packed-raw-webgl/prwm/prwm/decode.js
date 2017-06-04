@@ -71,6 +71,7 @@ function decode (buffer) {
     var attributes = {},
         attributeName,
         char,
+        attributeNormalized,
         attributeType,
         cardinality,
         encodingType,
@@ -94,7 +95,8 @@ function decode (buffer) {
 
         flags = array[pos];
 
-        attributeType = flags >> 6 & 0x03;
+        attributeType = flags >> 7 & 0x01;
+        attributeNormalized = !!(flags >> 6 & 0x01);
         cardinality = (flags >> 4 & 0x03) + 1;
         encodingType = flags & 0x0F;
         arrayType = InvertedEncodingTypes[encodingType];
@@ -110,6 +112,7 @@ function decode (buffer) {
 
         attributes[attributeName] = {
             type: attributeType,
+            normalized: attributeNormalized,
             cardinality: cardinality,
             values: values
         };

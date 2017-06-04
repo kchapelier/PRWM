@@ -168,17 +168,17 @@ var attributes = {},
     nbVertices = 0;
 
 if (positions) {
-    attributes['position'] = { cardinality: 3, values: new Float32Array(serialized.vertices) };
+    attributes['position'] = { cardinality: 3, normalized: false, values: new Float32Array(serialized.vertices) };
     nbVertices = serialized.vertices.length / 3;
 }
 
 if (normals) {
-    attributes['normal'] = { cardinality: 3, values: new Float32Array(serialized.normals) };
+    attributes['normal'] = { cardinality: 3, normalized: false, values: new Float32Array(serialized.normals) };
     nbVertices = serialized.normals.length / 3;
 }
 
 if (uvs) {
-    attributes['uv'] = { cardinality: 2, values: new Float32Array(serialized.uvs) };
+    attributes['uv'] = { cardinality: 2, normalized: false, values: new Float32Array(serialized.uvs) };
     nbVertices = serialized.uvs.length / 2;
 }
 

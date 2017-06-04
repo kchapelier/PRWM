@@ -40,14 +40,16 @@ function displayBinary (buffer, binary) {
 
 var lib = require('./index');
 
-var arrayBuffer = lib.encodePrwm(
+var arrayBuffer = lib.encode(
     {
         abcde: {
             cardinality: 1,
+            normalized: true,
             values: new Int16Array([0, 1, 3])
         },
         defgh: {
             cardinality: 2,
+            normalized: false,
             values: new Uint16Array([0, 1, 3, 7, 15, 14])
         }
     },
@@ -57,4 +59,4 @@ var arrayBuffer = lib.encodePrwm(
 
 displayBinary(arrayBuffer, true);
 
-console.log(lib.decodePrwm(arrayBuffer));
+console.log(lib.decode(arrayBuffer));
