@@ -1,0 +1,14 @@
+{
+  "name": "obj2prwm",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Kevin Chapelier",
+  "license": "MIT",
+  "dependencies": {
+    "wavefront-obj-parser": "~1.0.0",
+    "yargs": "~8.0.1"
+  }
+}
