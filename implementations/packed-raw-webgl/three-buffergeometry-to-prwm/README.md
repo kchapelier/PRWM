@@ -23,12 +23,13 @@ console.log(threeBufferGeometryToPrwm(bufferGeometry));
 ## API
 
 ```js
-threeBufferGeometryToPrwm(bufferGeometry);
+threeBufferGeometryToPrwm(bufferGeometry, bigEndian);
 ```
 
 ### Arguments
 
  * geometry : an instance of THREE.BufferGeometry (can be indexed or non-indexed).
+ * bigEndian : whether the endianness of the generated file should be Big Endian.
 
 ## Changelog
 

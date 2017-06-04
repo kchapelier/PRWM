@@ -2,6 +2,12 @@
 
 var prwm = require('../prwm/');
 
+/**
+ * Generate an ArrayBuffer containing a PRWM file from an instance of BufferGeometry
+ * @param {THREE.BufferGeoemtry} bufferGeometry An instance of BufferGeometry (can be indexed or non-indexed)
+ * @param {boolean} bigEndian Whether the endianness of the file should Big Endian
+ * @returns {ArrayBuffer} ArrayBuffer containing the PRWM file
+ */
 var bufferGeometryToPrwm = function bufferGeometryToPrwm (bufferGeometry, bigEndian) {
     if (bufferGeometry.type !== 'BufferGeometry') {
         throw new Error('three-buffergeometry-to-prwm can only be used with an instance of THREE.BufferGeometry');
