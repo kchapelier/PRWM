@@ -2,12 +2,18 @@
   "name": "three-buffergeometry-to-prwm",
   "version": "1.0.0",
   "private": true,
-  "description": "",
+  "description": "Takes a THREE.BufferGeometry and returns an ArrayBuffer containing a PRWM file.",
   "main": "index.js",
   "scripts": {
     "build-dev": "browserify ./index.js -d --s threeBuffergeometryToPrwm > ./build/three-buffergeometry-to-prwm.dev.js",
     "build-min": "browserify ./index.js --s threeBuffergeometryToPrwm | uglifyjs > ./build/three-buffergeometry-to-prwm.min.js"
   },
+  "keywords": [
+    "three",
+    "threejs",
+    "three.js",
+    "prwm"
+  ],
   "author": "Kevin Chapelier",
   "license": "MIT"
 }
