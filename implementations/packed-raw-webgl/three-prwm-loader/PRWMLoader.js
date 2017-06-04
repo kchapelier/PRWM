@@ -220,6 +220,12 @@
 
 		},
 
+		loadBest: function ( urlLittleEndian, urlBigEndian, onLoad, onProgress, onError ) {
+
+			this.load( ( this.isBigEndianPlatform() ? urlBigEndian : urlLittleEndian ), onLoad, onProgress, onError  );
+
+		},
+
 		parse: function ( arrayBuffer ) {
 
 			console.time( 'PRWMLoader' );
