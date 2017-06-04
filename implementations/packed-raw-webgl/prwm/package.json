@@ -9,6 +9,9 @@
     "build-dev": "browserify ./index.js -d --s prwm > ./build/prwm.dev.js",
     "build-min": "browserify ./index.js --s prwm | uglifyjs > ./build/prwm.min.js"
   },
+  "keywords": [
+    "prwm"
+  ],
   "author": "Kevin Chapelier",
   "license": "MIT",
   "devDependencies": {
