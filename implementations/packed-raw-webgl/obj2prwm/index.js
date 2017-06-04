@@ -7,7 +7,6 @@ var fs = require('fs'),
     prwm = require('../prwm/'),
     yargs = require('yargs');
 
-
 var argv = yargs.usage('Usage: obj2prwm -i inputFile -o outputFile [options]')
     .describe('i', 'Input file')
     .alias('i', 'in')
@@ -18,7 +17,9 @@ var argv = yargs.usage('Usage: obj2prwm -i inputFile -o outputFile [options]')
     .describe('normals', 'Include the normals in output file')
     .describe('indexed', 'Whether the geometry should be indexed')
     .describe('be', 'Write the output file in big endian')
-    .boolean(['uvs','positions','normals', 'indexed', 'be'])
+    .describe('q', 'Quiet mode. Silence the output.')
+    .alias('q', 'quiet')
+    .boolean(['uvs','positions','normals', 'indexed', 'quiet', 'be'])
     .demandOption(['o', 'i'])
     .help('h')
     .alias('h', 'help')
@@ -31,7 +32,8 @@ var now = Date.now(),
     uvs = !!argv.uvs,
     normals = !!argv.normals,
     indexed = !!argv.indexed,
-    bigEndian = !!argv.be;
+    bigEndian = !!argv.be,
+    log = argv.quiet ? function noop() {} : function log(s) { console.log(s) };
 
 function serializeIndexed (objData, usePositions, useNormals, useUvs) {
     var nbPolygons = objData.vertexIndex.length / 4, // the parser always return indices by group of 4 to support quads
@@ -153,13 +155,13 @@ function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
     };
 }
 
-console.log(' * Reading ' + argv.in);
+log(' * Reading ' + argv.in);
 var objString = fs.readFileSync(inFd, 'utf8');
 
-console.log(' * Parsing WaveFront OBJ data');
+log(' * Parsing WaveFront OBJ data');
 var objData = objParser(objString);
 
-console.log(' * Formatting data');
+log(' * Formatting data');
 var serialized = indexed ? serializeIndexed(objData, positions, normals, uvs) : serializeNonIndexed(objData, positions, normals, uvs);
 
 var attributes = {},
@@ -186,13 +188,13 @@ var arrayBuffer = prwm.encode(
     bigEndian
 );
 
-console.log(' * Writing ' + argv.out);
+log(' * Writing ' + argv.out);
 fs.writeFileSync(outFd, new Buffer(arrayBuffer), { flag: 'w' });
-console.log('');
-console.log('Operation completed in ' + ((Date.now() - now) / 1000).toFixed(2) + 's.');
-console.log('Original OBJ file size : ' + (Buffer.byteLength(objString, 'utf8') / 1024).toFixed(2) + 'kB');
-console.log('Generated ' + (indexed ? 'indexed' : 'non-indexed') + ' PRWM file size : ' + (arrayBuffer.byteLength / 1024).toFixed(2) + 'kB');
-console.log('Individual vertices : ' + nbVertices);
-console.log('');
+log('');
+log('Operation completed in ' + ((Date.now() - now) / 1000).toFixed(2) + 's.');
+log('Original OBJ file size : ' + (Buffer.byteLength(objString, 'utf8') / 1024).toFixed(2) + 'kB');
+log('Generated ' + (indexed ? 'indexed' : 'non-indexed') + ' PRWM file size : ' + (arrayBuffer.byteLength / 1024).toFixed(2) + 'kB');
+log('Individual vertices : ' + nbVertices);
+log('');
 
 
