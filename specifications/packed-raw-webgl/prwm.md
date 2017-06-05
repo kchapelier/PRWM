@@ -67,6 +67,7 @@ This should be set to 0 for non-indexed geometries, any other value should be tr
 
 
 
+
 ## Attribute block
 
 ### Attribute header
@@ -88,17 +89,11 @@ This should be set to 0 for non-indexed geometries, any other value should be tr
  * **0** : The attribute is not to be normalized.
  * **1** : The attribute should be normalized (see [vertexAttribPointer](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer)).
 
-This only affects attributes typed as floats.
+This only affects attributes encoded as integers (see below) and typed as floats.
 
 #### Cardinality
 
-Indicates the number of elements per value. 0 is scalar, 1 is a 2d vector, 2 is a 3d vector and 3 a 4d vector.
-
-Some examples  :
-
- * An attribute with a type of 2 and a cardinality of 0 would be mapped to a float
- * An attribute with a type of 0 and a cardinality of 1 would be mapped to a ivec2
- * An attribute with a type of 1 and a cardinality of 2 would be mapped to a uvec3
+Indicates the number of components per vertex attribute. 0 is scalar, 1 is a 2d vector, 2 is a 3d vector and 3 a 4d vector.
 
 #### Encoding type
 

@@ -82,6 +82,40 @@ var arrayBuffer = prwm.encode({
 console.log(arrayBuffer);
 ```
 
+```
+var prwm = require('prwm');
+
+// this will encode a prwm file with a simple square, indexed, and flag its position attribute to be considered
+// as integers values using WebGL2's vertexAttribIPointer
+
+var arrayBuffer = prwm.encode({
+    position: {
+        cardinality: 3,
+        type: prwm.Int,
+        normalized: false,
+        values: new Int32Array([
+            -1.0, -1.0,  0.0,
+             1.0, -1.0,  0.0,
+             1.0,  1.0,  0.0,
+            -1.0,  1.0,  0.0
+        ])
+    },
+    uv: {
+        cardinality: 2,
+        type: prwm.Float,
+        normalized: false,
+        values: new Int8Array([
+            0, 0
+            1, 0,
+            1, 1,
+            0, 1
+        ])
+    }
+}, new Uint16Array([0,1,2,0,2,3]), false);
+
+console.log(arrayBuffer);
+```
+
 ### Decoding
 
 ```
@@ -104,7 +138,7 @@ Return true for Big Endian, false for Little Endian.
 
 ### prwm.encode(attributes, indices, bigEndian)
 
- * **attributes :** A list of attribute, represented as an object literal where the name of the property is the name of the attribute. Each attribute is defined by its cardinality (the number of components per vertex attribute, either 1, 2, 3 or 4), whether it is normalized and its values.
+ * **attributes :** A list of attribute, represented as an object literal where the name of the property is the name of the attribute. Each attribute is defined by its cardinality (the number of components per vertex attribute, either 1, 2, 3 or 4), its type (Float or Integer), whether it is normalized and its values.
  * **indices :** The indices of the geometry, can be either null (for non-indexed property), an Uint16Array or an Uint32Array.
  * **bigEndian :** Whether to generate the file in Big Endian byte order.
 
