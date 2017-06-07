@@ -66,6 +66,24 @@ function decode (buffer) {
         indicesNumber = array[5] + (array[6] << 8) + (array[7] << 16);
     }
 
+    /** PRELIMINARY CHECKS **/
+
+    if (version === 0) {
+        throw new Error('PRWM decoder: Invalid format version: 0');
+    } else if (version !== 1) {
+        throw new Error('PRWM decoder: Unsupported format version: ' + version);
+    }
+
+    if (!indexedGeometry) {
+        if (indicesType !== 0) {
+            throw new Error('PRWM decoder: Indices type must be set to 0 for non-indexed geometries');
+        } else if (indicesNumber !== 0) {
+            throw new Error('PRWM decoder: Number of indices must be set to 0 for non-indexed geometries');
+        }
+    }
+
+    /** PARSING **/
+
     var pos = 8;
 
     var attributes = {},
