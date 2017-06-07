@@ -224,7 +224,7 @@
 
 		loadBest: function ( urlLittleEndian, urlBigEndian, onLoad, onProgress, onError ) {
 
-			this.load( ( this.isBigEndianPlatform() ? urlBigEndian : urlLittleEndian ), onLoad, onProgress, onError  );
+			this.load( ( isBigEndianPlatform() ? urlBigEndian : urlLittleEndian ), onLoad, onProgress, onError  );
 
 		},
 
