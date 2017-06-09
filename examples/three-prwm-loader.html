@@ -5,6 +5,7 @@
             html, body {
                 padding:0;
                 margin:0;
+                background:#000000;
             }
 
             .models {
@@ -29,18 +30,18 @@
             }
 
             .notes a, .notes a:visited {
-                color:#FFF;
+                color:#FFFFFF;
             }
 
             .models strong {
-                color:#FFF;
+                color:#FFFFFF;
                 text-transform: uppercase;
                 display:inline-block;
                 min-width:120px;
             }
 
             .models a, .models a:visited {
-                color:#FFF;
+                color:#FFFFFF;
                 margin-right:12px;
                 text-decoration: none;
             }
@@ -50,31 +51,31 @@
             }
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.js"></script>
-        <script src="../../implementations/packed-raw-webgl/three-prwm-loader/PRWMLoader.js"></script>
+        <script src="../implementations/three-prwm-loader/PRWMLoader.js"></script>
     </head>
     <body>
 
         <div class="models">
             <strong>Little-Endian</strong>
-            <a class="model" href="../../models/prwm/cube-LE.prwm">Cube</a>
-            <a class="model" href="../../models/prwm/smooth-nefertiti-LE.prwm">Smooth Nefertiti</a>
-            <a class="model" href="../../models/prwm/faceted-nefertiti-LE.prwm">Faceted Nefertiti</a>
-            <a class="model" href="../../models/prwm/smooth-suzanne-LE.prwm">Smooth Suzanne</a>
-            <a class="model" href="../../models/prwm/vive-controller-LE.prwm">Vive Controller</a>
-            <a class="model" href="../../models/prwm/cerberus-LE.prwm">Cerberus</a><br>
+            <a class="model" href="../models/prwm/cube-LE.prwm">Cube</a>
+            <a class="model" href="../models/prwm/smooth-nefertiti-LE.prwm">Smooth Nefertiti</a>
+            <a class="model" href="../models/prwm/faceted-nefertiti-LE.prwm">Faceted Nefertiti</a>
+            <a class="model" href="../models/prwm/smooth-suzanne-LE.prwm">Smooth Suzanne</a>
+            <a class="model" href="../models/prwm/vive-controller-LE.prwm">Vive Controller</a>
+            <a class="model" href="../models/prwm/cerberus-LE.prwm">Cerberus</a><br>
             <strong>Big-Endian</strong>
-            <a class="model" href="../../models/prwm/cube-BE.prwm">Cube</a>
-            <a class="model" href="../../models/prwm/smooth-nefertiti-BE.prwm">Smooth Nefertiti</a>
-            <a class="model" href="../../models/prwm/faceted-nefertiti-BE.prwm">Faceted Nefertiti</a>
-            <a class="model" href="../../models/prwm/smooth-suzanne-BE.prwm">Smooth Suzanne</a>
-            <a class="model" href="../../models/prwm/vive-controller-BE.prwm">Vive Controller</a>
-            <a class="model" href="../../models/prwm/cerberus-BE.prwm">Cerberus</a>
+            <a class="model" href="../models/prwm/cube-BE.prwm">Cube</a>
+            <a class="model" href="../models/prwm/smooth-nefertiti-BE.prwm">Smooth Nefertiti</a>
+            <a class="model" href="../models/prwm/faceted-nefertiti-BE.prwm">Faceted Nefertiti</a>
+            <a class="model" href="../models/prwm/smooth-suzanne-BE.prwm">Smooth Suzanne</a>
+            <a class="model" href="../models/prwm/vive-controller-BE.prwm">Vive Controller</a>
+            <a class="model" href="../models/prwm/cerberus-BE.prwm">Cerberus</a>
         </div>
         <div class="notes">
             The parsing of PRWM file is especially fast when the endianness of the file is the same as the endianness
             of the client platform. This platform endianness is <strong id="endianness"></strong>.<br><br>
             See your console for stats.<br><br>
-            <a href="./three-prwm-loader-benchmark.html" target="_blank">Benchmark comparing different loaders</a><br><br>
+            <a href="three-prwm-loader-benchmark.html" target="_blank">Benchmark comparing different loaders</a><br><br>
             <a href="https://github.com/kchapelier/experimental-file-formats" target="_blank">Specifications and implementations</a>
         </div>
         <script>
@@ -163,7 +164,7 @@
                 //
 
                 renderer = new THREE.WebGLRenderer({ antialias: true });
-                renderer.setPixelRatio( window.devicePixelRatio );
+                renderer.setPixelRatio( 1 );
                 renderer.setSize( window.innerWidth, window.innerHeight );
                 container.appendChild( renderer.domElement );
 
@@ -181,7 +182,7 @@
 
                 //
 
-                loadGeometry('../../models/prwm/smooth-suzanne-LE.prwm');
+                loadGeometry('../models/prwm/smooth-suzanne-LE.prwm');
 
                 window.addEventListener( 'resize', onWindowResize, false );
 

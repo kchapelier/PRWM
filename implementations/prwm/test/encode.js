@@ -1,6 +1,6 @@
 "use strict";
 
-var lib = require('../'),
+var lib = require('../index'),
     should = require('chai').should();
 
 function generateAttributes (nbAttributes) {

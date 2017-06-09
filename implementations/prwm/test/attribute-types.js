@@ -1,6 +1,6 @@
 "use strict";
 
-var lib = require('../'),
+var lib = require('../index'),
     should = require('chai').should();
 
 describe('Attribute types', function () {

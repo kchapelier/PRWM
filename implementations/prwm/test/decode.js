@@ -1,6 +1,6 @@
 "use strict";
 
-var lib = require('../'),
+var lib = require('../index'),
     fs = require('fs'),
     should = require('chai').should();
 
