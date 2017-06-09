@@ -5,27 +5,42 @@
             html, body {
                 padding:0;
                 margin:0;
-                background:black;
-                color:white;
-            }
-
-            body {
-                padding:20px;
+                background:#000000;
+                color:#FFFFFF;
+                font-family: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+                font-size:13px;
             }
 
             #times {
-                font-family:Lucida Console, Bitstream Vera Sans Mono, monospace;
+                position:absolute;
+                left:12px;
+                top:10px;
             }
 
             #times p {
-                display:block;
-                margin:4px 0;
-                padding:0;
+                margin:0;
+                padding:2px 0;
             }
 
             #times span {
                 display:inline-block;
                 min-width:200px;
+            }
+
+            .notes {
+                position:absolute;
+                left:12px;
+                bottom:10px;
+                z-index:2;
+                font-family: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+                font-size:13px;
+                text-align:left;
+                color:#FFFFFF;
+                max-width:300px;
+            }
+
+            .notes a {
+                color:#FFFFFF;
             }
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.js"></script>
@@ -37,11 +52,15 @@
         <script src="../implementations/three-prwm-loader/PRWMLoader.js"></script>
     </head>
     <body>
-        <p>The following times only account for the actual parsing time. <br/>It does not include the download.</p>
-        <p>DumbJSONLoader is a custom simplified JSON loader for THREE.js.</p>
-        <div id="times">
+        <div id="times"></div>
+        <div class="notes">
+            The times abiove only account for the actual <strong>parsing</strong> time. It does not include the download.<br><br>
+            DumbJSONLoader is a custom simplified JSON loader for THREE.js.<br><br>
 
+            <a href="https://github.com/kchapelier/PRWM" target="_blank">Specifications and implementations</a>
         </div>
+
+
         <script>
             /* Hijacking console.time and console.timeEnd, eh, don't do that in production code... */
 
