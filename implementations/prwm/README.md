@@ -138,7 +138,7 @@ Return true for Big Endian, false for Little Endian.
 
 ### prwm.encode(attributes, indices, bigEndian)
 
- * **attributes :** A list of attribute, represented as an object literal where the name of the property is the name of the attribute. Each attribute is defined by its cardinality (the number of components per vertex attribute, either 1, 2, 3 or 4), its type (Float or Integer), whether it is normalized and its values.
+ * **attributes :** A list of attribute, represented as an object literal where the name of the property is the name of the attribute. Each attribute is defined by its cardinality (the number of components per vertex attribute, either 1, 2, 3 or 4), its type (Float or Integer), whether it is normalized and its values as a typed array.
  * **indices :** The indices of the geometry, can be either null (for non-indexed property), an Uint16Array or an Uint32Array.
  * **bigEndian :** Whether to generate the file in Big Endian byte order.
 
