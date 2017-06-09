@@ -1,9 +1,8 @@
 {
   "name": "prwm",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Packed Raw WebGl Model file format encoder/decoder",
   "main": "index.js",
-  "private": true,
   "scripts": {
     "test": "mocha test/",
     "build-dev": "browserify ./index.js -d --s prwm > ./build/prwm.dev.js",

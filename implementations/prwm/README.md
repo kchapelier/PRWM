@@ -2,7 +2,7 @@
 
 The reference encoding / decoding library for the PRWM file format.
 
-PRWM is a 3d model file format specifically designed for Javascript and WebGL. More information on this [here](https://github.com/kchapelier/experimental-file-formats).
+Packed Raw WebGL Model is a binary file format for nD geometries specifically designed for JavaScript and WebGL with a strong focus on fast parsing (from 1ms to 0.1ms in Chrome 59 on a MBP Late 2013). More information on this [here](https://github.com/kchapelier/PRWM).
 
 ## Installing
 
@@ -148,7 +148,7 @@ Return true for Big Endian, false for Little Endian.
 
 ## Changelog
 
-### 1.0.0 (2017.06.04) :
+### 1.0.0 (2017.06.09) :
 
  * First implementation, with full support for the first version of the format.
 
