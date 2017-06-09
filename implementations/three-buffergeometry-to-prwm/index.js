@@ -1,6 +1,6 @@
 "use strict";
 
-var prwm = require('../prwm/index');
+var prwm = require('prwm');
 
 /**
  * Generate an ArrayBuffer containing a PRWM file from an instance of BufferGeometry

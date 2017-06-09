@@ -15,5 +15,8 @@
     "prwm"
   ],
   "author": "Kevin Chapelier",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "prwm": "^1.0.0"
+  }
 }

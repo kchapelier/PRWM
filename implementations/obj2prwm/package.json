@@ -15,6 +15,7 @@
   "author": "Kevin Chapelier",
   "license": "MIT",
   "dependencies": {
+    "prwm": "^1.0.0",
     "wavefront-obj-parser": "~1.0.0",
     "yargs": "~8.0.1"
   }

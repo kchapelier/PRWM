@@ -4,7 +4,7 @@
 
 var fs = require('fs'),
     objParser = require('wavefront-obj-parser'),
-    prwm = require('./../prwm'),
+    prwm = require('prwm'),
     yargs = require('yargs');
 
 var argv = yargs.usage('Usage: obj2prwm -i inputFile -o outputFile [options]')
