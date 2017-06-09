@@ -1,9 +1,10 @@
-# Packed Raw WebGL Model (PRWM) Specifications (version 1 / rc 2017-06-02)
+# Packed Raw WebGL Model (PRWM) Specifications (version 1 / final 2017-06-09)
 
 ## Conventions
 
  * All signed integer values are stored in two's complement format.
  * All float values are stored following the IEEE 754 spec.
+ * The endianness of the file is defined in its header.
  * The format supports indexed and non-indexed geometries.
  * The format is designed to allow any number of custom attributes and doesn't force the use of any pre-defined attributes.
  * The format doesn't support any type of bone-based animations, morphing is achievable with custom attributes.
@@ -11,7 +12,7 @@
  * The format is specifically designed for WebGL and will probably prove useless for any other platforms.
 
 The general structure of the file is the following : **One header** (8 bytes) followed by **one or more attribute
-blocks** (varying byte count) followed by some padding and, in the case of an indexed geometry, **up to one indices
+blocks** (varying byte count) and, in the case of an indexed geometry, **up to one indices
 block** (varying byte count).
 
 ## Header
@@ -55,11 +56,11 @@ A value of 0 should be treated as an error by the decoder.
 
 It should be noted that most WebGL implementations are currently limited to 16 attributes per vertex.
 
-#### Number of values per attribute
+### Number of values per attribute
 
 Indicates the number of values per attribute.
 
-#### Number of indices
+### Number of indices
 
 The number of indices stored in the index block.
 
@@ -122,7 +123,7 @@ without any padding, three padding bytes should be added to the header block as 
 
 The values of the attributes are encoded sequentially with the specified encoding type, making up the rest of the attribute block.
 
-While not directly encoded in the attribute header, the total length of the attribute values can be obtain as such :
+While not directly encoded in the attribute header, the total length of the attribute values can be obtained as such :
 
 `Attribute values length = Cardinality * Encoding type byte count * Number of values per attribute`
 
@@ -135,7 +136,7 @@ This block should only be present for indexed geometries.
 
 It should start with some padding to align the values on position which is a multiple of 4, if needed.
 
-While not directly encoded in the block, the total length of the indices values can be obtain as such :
+While not directly encoded in the block, the total length of the indices values can be obtained as such :
 
 `Indices values length = Number of indices * Indices type byte count`
 
