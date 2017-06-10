@@ -92,7 +92,7 @@
 		var array = new Uint8Array( buffer ),
 			version = array[ 0 ],
 			flags = array[ 1 ],
-			indexedGeometry = !!(flags >> 7 & 0x01),
+			indexedGeometry = !! ( flags >> 7 & 0x01 ),
 			indicesType = flags >> 6 & 0x01,
 			bigEndian = ( flags >> 5 & 0x01 ) === 1,
 			attributesNumber = flags & 0x1F,
@@ -110,6 +110,34 @@
 			indicesNumber = array[ 5 ] + ( array[ 6 ] << 8 ) + ( array[ 7 ] << 16 );
 
 		}
+
+		/** PRELIMINARY CHECKS **/
+
+		if ( version === 0 ) {
+
+			throw new Error( 'PRWM decoder: Invalid format version: 0' );
+
+		} else if ( version !== 1 ) {
+
+			throw new Error( 'PRWM decoder: Unsupported format version: ' + version );
+
+		}
+
+		if ( ! indexedGeometry ) {
+
+			if ( indicesType !== 0 ) {
+
+				throw new Error( 'PRWM decoder: Indices type must be set to 0 for non-indexed geometries' );
+
+			} else if ( indicesNumber !== 0 ) {
+
+				throw new Error( 'PRWM decoder: Number of indices must be set to 0 for non-indexed geometries' );
+
+			}
+
+		}
+
+		/** PARSING **/
 
 		var pos = 8;
 
@@ -149,7 +177,7 @@
 			flags = array[ pos ];
 
 			attributeType = flags >> 7 & 0x01;
-			attributeNormalized = !!(flags >> 6 & 0x01);
+			attributeNormalized = !! ( flags >> 6 & 0x01 );
 			cardinality = ( flags >> 4 & 0x03 ) + 1;
 			encodingType = flags & 0x0F;
 			arrayType = InvertedEncodingTypes[ encodingType ];
@@ -224,7 +252,7 @@
 
 		loadBest: function ( urlLittleEndian, urlBigEndian, onLoad, onProgress, onError ) {
 
-			this.load( ( isBigEndianPlatform() ? urlBigEndian : urlLittleEndian ), onLoad, onProgress, onError  );
+			this.load( ( isBigEndianPlatform() ? urlBigEndian : urlLittleEndian ), onLoad, onProgress, onError );
 
 		},
 
