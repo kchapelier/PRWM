@@ -2,6 +2,8 @@
 
 Takes a THREE.BufferGeometry and returns an ArrayBuffer containing a PRWM file.
 
+Packed Raw WebGL Model is a binary file format for nD geometries specifically designed for JavaScript and WebGL with a strong focus on fast parsing (from 1ms to 0.1ms in Chrome 59 on a MBP Late 2013). More information on this [here](https://github.com/kchapelier/PRWM).
+
 Mostly a convenience wrapper around [prwm](https://www.npmjs.com/package/prwm).
 
 ## Installing
@@ -33,9 +35,9 @@ threeBufferGeometryToPrwm(bufferGeometry, bigEndian);
 
 ## Changelog
 
-### 1.0.0 (2017.06.04) :
+### 1.0.0 (2017.06.10) :
 
- * First implementation.
+ * First release.
 
 ## Roadmap
 

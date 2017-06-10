@@ -1,11 +1,14 @@
 {
   "name": "obj2prwm",
-  "version": "0.0.1",
-  "private": true,
+  "version": "1.0.0",
   "description": "CLI tool to convert WaveFront OBJ files into PRWM files.",
   "main": "index.js",
   "bin": {
     "obj2prwm": "cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/PRWM.git"
   },
   "keywords": [
     "wavefront",
@@ -14,6 +17,11 @@
   ],
   "author": "Kevin Chapelier",
   "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kchapelier/PRWM/issues"
+  },
+  "homepage": "https://github.com/kchapelier/PRWM",
   "dependencies": {
     "prwm": "^1.0.0",
     "wavefront-obj-parser": "~1.0.0",

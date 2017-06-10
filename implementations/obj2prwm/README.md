@@ -2,6 +2,8 @@
 
 CLI tool to convert WaveFront OBJ files into PRWM files.
 
+Packed Raw WebGL Model is a binary file format for nD geometries specifically designed for JavaScript and WebGL with a strong focus on fast parsing (from 1ms to 0.1ms in Chrome 59 on a MBP Late 2013). More information on this [here](https://github.com/kchapelier/PRWM).
+
 Currently this tool only support the conversion of OBJ containing a single model made of triangles.
 
 ## Installing
@@ -43,9 +45,9 @@ Individual vertices : 12147
 
 ## Changelog
 
-### 0.0.1 (2017.06.04) :
+### 1.0.0 (2017.06.10) :
 
- * First implementation.
+ * First release.
 
 ## Roadmap
 

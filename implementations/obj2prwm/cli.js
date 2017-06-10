@@ -48,9 +48,8 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
         normalIndex,
         uvIndex,
         mapped,
-        index;
-
-    var nextIndex = 0;
+        index,
+        nextIndex = 0;
 
     for (i = 0; i < nbPolygons; i++) {
         for (k = 0; k < 3; k++) { // assume we don't have actual quads in the models

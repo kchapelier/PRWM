@@ -8,11 +8,20 @@
     "build-dev": "browserify ./index.js -d --s prwm > ./build/prwm.dev.js",
     "build-min": "browserify ./index.js --s prwm | uglifyjs > ./build/prwm.min.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/PRWM.git"
+  },
   "keywords": [
     "prwm"
   ],
   "author": "Kevin Chapelier",
   "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kchapelier/PRWM/issues"
+  },
+  "homepage": "https://github.com/kchapelier/PRWM",
   "devDependencies": {
     "chai": "^4.0.1",
     "mocha": "^3.4.2"
