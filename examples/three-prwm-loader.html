@@ -153,7 +153,7 @@
                         mesh.scale.set(50,50,50);
                         scene.add( mesh );
 
-                        console.log(geometry.index ? 'indexed geometry' : 'non-indexed-geometry');
+                        console.log(geometry.index ? 'indexed geometry' : 'non-indexed geometry');
                         console.log('# of vertices: ' + geometry.attributes.position.count);
                         console.log('# of polygons: ' + (geometry.index ? geometry.index.count / 3 : geometry.attributes.position.count / 3));
                         busy = false;
