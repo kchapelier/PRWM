@@ -41,19 +41,19 @@ The reference encoder/decoder for the file format.
 
 ### obj2prwm
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/obj2prwm) / npm
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/obj2prwm) / [npm](https://www.npmjs.com/package/obj2prwm)
 
 A simple CLI utility to convert OBJ files to PRWM files.
 
 ### three-buffergeometry-to-prwm
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-buffergeometry-to-prwm) / npm / [online example](http://www.kchapelier.com/prwm/examples/three-buffergeometry-to-prwm.html)
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-buffergeometry-to-prwm) / [npm](https://www.npmjs.com/package/three-buffergeometry-to-prwm) / [online example](http://www.kchapelier.com/prwm/examples/three-buffergeometry-to-prwm.html)
 
 A module to create a PRWM file out of any instance of THREE.BufferGeometry. Useful for procedural generation application
 
 ### three-prwm-loader
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [PR on Three.js](https://github.com/mrdoob/three.js/pull/11484) / [online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
 
 A loader for the Three.js engine.
 
