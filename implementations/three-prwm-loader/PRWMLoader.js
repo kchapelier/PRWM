@@ -1,5 +1,6 @@
 /**
  * @author Kevin Chapelier / https://github.com/kchapelier
+ * See https://github.com/kchapelier/PRWM for more informations about this file format
  */
 
 ( function ( THREE ) {
@@ -239,6 +240,8 @@
 
 			var scope = this;
 
+			url = url.replace( /\*/g, isBigEndianPlatform() ? 'be' : 'le' );
+
 			var loader = new THREE.FileLoader( scope.manager );
 			loader.setResponseType( 'arraybuffer' );
 
@@ -247,12 +250,6 @@
 				onLoad( scope.parse( arrayBuffer ) );
 
 			}, onProgress, onError );
-
-		},
-
-		loadBest: function ( urlLittleEndian, urlBigEndian, onLoad, onProgress, onError ) {
-
-			this.load( ( isBigEndianPlatform() ? urlBigEndian : urlLittleEndian ), onLoad, onProgress, onError );
 
 		},
 
