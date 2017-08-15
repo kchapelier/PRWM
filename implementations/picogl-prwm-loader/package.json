@@ -7,6 +7,9 @@
     "build-dev": "browserify ./index.js -d --s PRWMLoader > ./build/PRWMLoader.dev.js",
     "build-min": "browserify ./index.js --s PRWMLoader | uglifyjs > ./build/PRWMLoader.min.js"
   },
+  "files": [
+    "index.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kchapelier/PRWM.git"
