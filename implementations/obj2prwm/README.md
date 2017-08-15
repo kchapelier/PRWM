@@ -14,11 +14,11 @@ With [npm](http://npmjs.org) do:
 npm install obj2prwm -g
 ```
 
-## Usage
+## CLI Usage
 
-```obj2prwm -i inputFile -o outputFile [OPTIONS]```
+### obj2prwm -i inputFile -o outputFile [OPTIONS]
 
-### Options
+**Options**
 
  * **--positions :** Include the vertices positions in the destination file.
  * **--normals :** Include the normals in the destination file.
@@ -26,6 +26,21 @@ npm install obj2prwm -g
  * **--indexed :** Indicate that the geometry stored in the destination file must be indexed. (recommended)
  * **--be :** Indicate that the destination file must be in Big Endian byte order. By default the destination file is in Little Endian.
  * **-q, --quiet :** Quiet mode. Silence the output to the console.
+
+## API
+
+### obj2prwm.convert(objString, options)
+
+**Arguments**
+
+ * **objString :** The obj file as a string.
+ * **options :** Options
+    * **positions :** Include the vertices positions in the destination file.
+    * **normals :** Include the normals in the destination file.
+    * **uvs :** Include the UVs in the destination file.
+    * **indexed :** Indicate that the geometry stored in the destination file must be indexed. (recommended)
+    * **bigEndian :** Indicate that the destination file must be in Big Endian byte order. By default the destination file is in Little Endian.
+    * **quiet :** Quiet mode. Silence the output to the console.
 
 ## Example
 
@@ -45,13 +60,16 @@ Individual vertices : 12147
 
 ## Changelog
 
+### 1.1.0 (2017.08.16) :
+
+ * Allow to use the module programmatically
+
 ### 1.0.0 (2017.06.10) :
 
  * First release.
 
 ## Roadmap
 
- * Allow to use the project as a library
  * Support OBJ with quads
  * Support the generation of normals if there are missing
  * Support the generation of tangents
