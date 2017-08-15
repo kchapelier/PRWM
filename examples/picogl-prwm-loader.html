@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PicoGL.js: PRWM Loader</title>
+    <script src="js/picogl/gl-matrix.js"></script>
+    <script src="js/picogl/picogl.min.js"></script>
+    <script src="js/picogl/picogl-utils.js"></script>
+    <script src="./../implementations/picogl-prwm-loader/build/PRWMLoader.min.js"></script>
+    <style>
+        html, body {
+            padding:0;
+            margin:0;
+            background:#000000;
+            overflow:hidden;
+        }
+
+        .models {
+            position:absolute;
+            top:10px;
+            left:12px;
+            z-index:2;
+            font-family: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+            font-size:13px;
+        }
+
+        .notes {
+            position:absolute;
+            left:12px;
+            bottom:10px;
+            z-index:2;
+            font-family: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+            font-size:13px;
+            text-align:left;
+            color:#FFFFFF;
+            max-width:300px;
+        }
+
+        .notes a, .notes a:visited {
+            color:#FFFFFF;
+        }
+
+        .models strong {
+            color:#FFFFFF;
+            text-transform: uppercase;
+            display:inline-block;
+            min-width:120px;
+        }
+
+        .models a, .models a:visited {
+            color:#FFFFFF;
+            margin-right:12px;
+            text-decoration: none;
+        }
+
+        .models a:hover, .models a:focus {
+            text-decoration: underline;
+        }
+
+        #timer {
+            position:absolute;
+            bottom:0;
+            right:0;
+            font-family: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+            font-size:13px;
+            text-align:left;
+            color:#FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<div class="models">
+    <strong>Little-Endian</strong>
+    <a class="model" href="../models/prwm/cube.le.prwm">Cube</a>
+    <a class="model" href="../models/prwm/smooth-nefertiti.le.prwm">Smooth Nefertiti</a>
+    <a class="model" href="../models/prwm/faceted-nefertiti.le.prwm">Faceted Nefertiti</a>
+    <a class="model" href="../models/prwm/smooth-suzanne.le.prwm">Smooth Suzanne</a>
+    <a class="model" href="../models/prwm/vive-controller.le.prwm">Vive Controller</a>
+    <a class="model" href="../models/prwm/cerberus.le.prwm">Cerberus</a><br>
+    <strong>Big-Endian</strong>
+    <a class="model" href="../models/prwm/cube.be.prwm">Cube</a>
+    <a class="model" href="../models/prwm/smooth-nefertiti.be.prwm">Smooth Nefertiti</a>
+    <a class="model" href="../models/prwm/faceted-nefertiti.be.prwm">Faceted Nefertiti</a>
+    <a class="model" href="../models/prwm/smooth-suzanne.be.prwm">Smooth Suzanne</a>
+    <a class="model" href="../models/prwm/vive-controller.be.prwm">Vive Controller</a>
+    <a class="model" href="../models/prwm/cerberus.be.prwm">Cerberus</a>
+</div>
+<div class="notes">
+    The parsing of PRWM file is especially fast when the endianness of the file is the same as the endianness
+    of the client platform. This platform endianness is <strong id="endianness"></strong>.<br><br>
+    See your console for stats.<br><br>
+    <a href="three-prwm-loader-benchmark.html" target="_blank">Benchmark comparing different Three.js loaders</a><br><br>
+    <a href="https://github.com/kchapelier/PRWM" target="_blank">Specifications and implementations</a>
+</div>
+<canvas id="gl-canvas"></canvas>
+<script type="x-shader/vs" id="vertex-draw">
+        #version 300 es
+
+        layout(std140, column_major) uniform;
+
+        layout(location=0) in vec4 position;
+        layout(location=1) in vec4 normal;
+
+        uniform SceneUniforms {
+            mat4 viewProj;
+            vec4 eyePosition;
+            vec4 lightPosition;
+        };
+
+        uniform mat4 uModel;
+
+        out vec3 vPosition;
+        out vec3 vNormal;
+
+        void main() {
+            vec4 worldPosition = uModel * position;
+            vPosition = worldPosition.xyz;
+            vNormal = (uModel * normal).xyz;
+            gl_Position = viewProj * worldPosition;
+        }
+    </script>
+<script type="x-shader/vf" id="fragment-draw">
+        #version 300 es
+        precision highp float;
+
+        layout(std140, column_major) uniform;
+
+        uniform SceneUniforms {
+            mat4 viewProj;
+            vec4 eyePosition;
+            vec4 lightPosition;
+        };
+
+        in vec3 vPosition;
+        in vec3 vNormal;
+
+        out vec4 fragColor;
+        void main() {
+            vec3 color = vec3(1.);
+
+            vec3 normal = normalize(vNormal);
+            vec3 eyeVec = normalize(eyePosition.xyz - vPosition);
+            vec3 incidentVec = normalize(vPosition - lightPosition.xyz);
+            vec3 lightVec = -incidentVec;
+            float diffuse = max(dot(lightVec, normal), 0.0);
+            float highlight = pow(max(dot(eyeVec, reflect(incidentVec, normal)), 0.0), 100.0);
+            float ambient = 0.1;
+            fragColor = vec4(color * (diffuse + highlight + ambient), 1.0);
+        }
+    </script>
+<script type="text/javascript">
+    utils.addTimerElement();
+
+    document.getElementById('endianness').innerHTML = PRWMLoader.isBigEndianPlatform() ? 'big-endian' : 'little-endian';
+
+    var canvas = document.getElementById("gl-canvas");
+
+    if (!utils.testWebGL2()) {
+        console.error("WebGL 2 not available");
+        document.body.innerHTML = "This example requires WebGL 2 which is unavailable on this system."
+    }
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var app = PicoGL.createApp(canvas, {
+        alpha: false,
+        depth: true,
+        stencil: true,
+        antialias: true
+    });
+
+    app.clearColor(0.0, 0.0, 0.0, 1.0);
+    app.depthTest();
+
+    var prwmLoader = new PRWMLoader(PicoGL, app).setVerbosity(true);
+
+    var timer = app.createTimer();
+
+    // SET UP PROGRAM
+    var vsSource =  document.getElementById("vertex-draw").text.trim();
+    var fsSource =  document.getElementById("fragment-draw").text.trim();
+    var program = app.createProgram(vsSource, fsSource);
+
+    // SET UP UNIFORM BUFFER
+    var projMatrix = mat4.create();
+    mat4.perspective(projMatrix, Math.PI / 2.3, canvas.width / canvas.height, 0.1, 100.0);
+
+    var viewMatrix = mat4.create();
+    var eyePosition = vec3.fromValues(2.75, 1, 2.75);
+    mat4.lookAt(viewMatrix, eyePosition, vec3.fromValues(0, 0, 0), vec3.fromValues(0, 1, 0));
+
+    var viewProjMatrix = mat4.create();
+    mat4.multiply(viewProjMatrix, projMatrix, viewMatrix);
+
+    var lightPosition = vec3.fromValues(2, 2, 1.5);
+
+    var sceneUniformBuffer = app.createUniformBuffer([
+        PicoGL.FLOAT_MAT4,
+        PicoGL.FLOAT_VEC4,
+        PicoGL.FLOAT_VEC4
+    ])
+            .set(0, viewProjMatrix)
+            .set(1, eyePosition)
+            .set(2, lightPosition)
+            .update();
+
+    var modelMatrix = mat4.create();
+    var rotateXMatrix = mat4.create();
+    var rotateYMatrix = mat4.create();
+
+    var angleX = 0;
+    var angleY = 0;
+
+    window.onresize = function() {
+        app.resize(window.innerWidth, window.innerHeight);
+
+        mat4.perspective(projMatrix, Math.PI / 2.2, app.width / app.height, 0.1, 100.0);
+        mat4.multiply(viewProjMatrix, projMatrix, viewMatrix);
+
+        sceneUniformBuffer.set(0, viewProjMatrix).update();
+    };
+
+    var drawCall = null;
+    var vertexArray = null;
+    var busy = false;
+
+    function loadGeometry (url) {
+        if (!busy) {
+            busy = true;
+            drawCall = null;
+            if (vertexArray !== null) {
+                vertexArray.delete();
+                vertexArray = null;
+            }
+
+            prwmLoader.load(
+                url,
+                {
+                    position: 0,
+                    normal: 1
+                },
+                function (modelArray) {
+                    busy = false;
+                    angleX = angleY = 0; // reset rotation
+                    vertexArray = modelArray;
+                    drawCall = app.createDrawCall(program, modelArray)
+                        .uniformBlock("SceneUniforms", sceneUniformBuffer);
+                }
+            );
+        }
+    }
+
+    loadGeometry("./../models/prwm/smooth-suzanne.le.prwm");
+
+
+    function draw() {
+        if (timer.ready()) {
+            utils.updateTimerElement(timer.cpuTime, timer.gpuTime);
+        }
+
+        timer.start();
+
+        angleX += 0.0;
+        angleY += 0.015;
+
+        mat4.fromXRotation(rotateXMatrix, angleX);
+        mat4.fromYRotation(rotateYMatrix, angleY);
+        mat4.multiply(modelMatrix, rotateXMatrix, rotateYMatrix);
+
+        app.clear();
+
+        if (drawCall !== null) {
+            drawCall.uniform("uModel", modelMatrix);
+            drawCall.draw();
+        }
+
+        timer.end();
+
+        requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+
+    document.querySelectorAll('a.model').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            loadGeometry(anchor.href);
+        });
+    });
+
+</script>
+</body>
+</html>
