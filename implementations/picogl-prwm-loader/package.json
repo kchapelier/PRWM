@@ -1,0 +1,29 @@
+{
+  "name": "picogl-prwm-loader",
+  "version": "1.0.0",
+  "description": "PRWM loader for PicoGL.js",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "browserify ./index.js -d --s PRWMLoader > ./build/PRWMLoader.dev.js",
+    "build-min": "browserify ./index.js --s PRWMLoader | uglifyjs > ./build/PRWMLoader.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/PRWM.git"
+  },
+  "keywords": [
+    "prwm",
+    "picogl",
+    "picogl.js"
+  ],
+  "author": "Kevin Chapelier",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kchapelier/PRWM/issues"
+  },
+  "homepage": "https://github.com/kchapelier/PRWM",
+  "dependencies": {
+    "prwm": "^1.0.0"
+  }
+}
