@@ -53,13 +53,29 @@ A module to create a PRWM file out of any instance of THREE.BufferGeometry. Usef
 
 ### three-prwm-loader
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [PR on Three.js](https://github.com/mrdoob/three.js/pull/11484) / [online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
+
+Merged in Three.js since r86: [github](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/PRWMLoader.js) / [online example](https://threejs.org/examples/?q=prwm#webgl_loader_prwm)
 
 A loader for the Three.js engine.
+
+### picogl-prwm-loader
+
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/picogl-prwm-loader) / [npm](https://www.npmjs.com/package/picogl-prwm-loader) / [online example](http://www.kchapelier.com/prwm/examples/picogl-prwm-loader.html)
+
+A loader for PicoGL.js
 
 ## Example files
 
  * [Several valid PRWM files](https://github.com/kchapelier/PRWM/tree/master/models/prwm)
+
+## Online tools
+
+### PRWM Inspector
+
+http://www.kchapelier.com/prwm/examples/prwm-inspector.html
+
+Drag and drop a PRWM file to analyze its content.
 
 ## Legacy
 
