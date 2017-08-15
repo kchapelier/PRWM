@@ -6,7 +6,8 @@ var lib = require('../index'),
 
 var cubeBEBuffer = fs.readFileSync(__dirname + '/assets/cube-BE.prwm'),
     cubeLEBuffer = fs.readFileSync(__dirname + '/assets/cube-LE.prwm'),
-    expectedCubeData = require('./assets/cube.js');
+    expectedCubeBEData = require('./assets/cube')(true),
+    expectedCubeLEData = require('./assets/cube')(false);
 
 // see https://github.com/nodejs/node/issues/11132#issuecomment-277157700
 var cubeBE = new Uint8Array(cubeBEBuffer).buffer,
@@ -25,13 +26,13 @@ describe('decode()', function () {
     it('should properly read a big endian file', function () {
         var data = lib.decode(cubeBE);
 
-        data.should.deep.equal(expectedCubeData);
+        data.should.deep.equal(expectedCubeBEData);
     });
 
     it('should properly read a little endian file', function () {
         var data = lib.decode(cubeLE);
 
-        data.should.deep.equal(expectedCubeData);
+        data.should.deep.equal(expectedCubeLEData);
     });
 
     it('should throw an error if the version is 0', function () {

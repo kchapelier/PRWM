@@ -1,6 +1,6 @@
 {
   "name": "prwm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Packed Raw WebGl Model file format encoder/decoder",
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,13 @@
     "build-dev": "browserify ./index.js -d --s prwm > ./build/prwm.dev.js",
     "build-min": "browserify ./index.js --s prwm | uglifyjs > ./build/prwm.min.js"
   },
+  "files": [
+    "index.js",
+    "utils/is-big-endian-platform.js",
+    "prwm/attribute-types.js",
+    "prwm/decode.js",
+    "prwm/encode.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kchapelier/PRWM.git"

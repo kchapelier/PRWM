@@ -148,6 +148,11 @@ Return true for Big Endian, false for Little Endian.
 
 ## Changelog
 
+### 1.1.0 (2017.08.15) :
+
+ * Add endianness of the file in the decoded data.
+ * Reduce the weight of the npm package.
+
 ### 1.0.0 (2017.06.09) :
 
  * First implementation, with full support for the first version of the format.

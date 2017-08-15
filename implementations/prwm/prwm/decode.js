@@ -152,6 +152,7 @@ function decode (buffer) {
 
     return {
         version: version,
+        bigEndian: bigEndian,
         attributes: attributes,
         indices: indices
     };
