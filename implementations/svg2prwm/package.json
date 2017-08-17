@@ -1,0 +1,40 @@
+{
+  "name": "svg2prwm",
+  "version": "1.0.0",
+  "description": "CLI tool to convert SVG files into PRWM files.",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "browserify ./index.js -d --s svg2prwm > ./build/svg2prwm.dev.js",
+    "build-min": "browserify ./index.js --s svg2prwm | uglifyjs > ./build/svg2prwm.min.js"
+  },
+  "bin": {
+    "svg2prwm": "cli.js"
+  },
+  "files": [
+    "index.js",
+    "cli.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/PRWM.git"
+  },
+  "keywords": [
+    "svg",
+    "prwm"
+  ],
+  "author": "Kevin Chapelier",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kchapelier/PRWM/issues"
+  },
+  "homepage": "https://github.com/kchapelier/PRWM",
+  "dependencies": {
+    "extract-svg-path": "~2.1.0",
+    "mesh-reindex": "^1.0.0",
+    "prwm": "^1.0.0",
+    "svg-mesh-3d": "~1.1.0",
+    "unindex-mesh": "^2.0.0",
+    "yargs": "~8.0.1"
+  }
+}
