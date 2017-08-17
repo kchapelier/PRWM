@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OBJ2PRWM</title>
+        <script src="./../implementations/obj2prwm/build/obj2prwm.min.js"></script>
+        <style>
+            html {
+                height:100%;
+            }
+
+            body {
+                margin:0;
+                padding:0;
+                min-height:100%;
+                background:#F5F5F5;
+                font-family: Lucida Grande, sans-serif;
+            }
+
+            #cta {
+                display:inline-block;
+                width:600px;
+                background:rgba(0,0,0,0.1);
+                border-radius:4px;
+                line-height:50px;
+                position:absolute;
+                top:50vh;
+                left:50vw;
+                transform:translate(-300px, -30px);
+                text-align:center;
+                opacity:1;
+                transition:opacity 0.2s ease-in-out;
+            }
+
+            body.inspecting #cta {
+                opacity:0;
+            }
+
+            #form {
+                width:500px;
+                position:absolute;
+                top:50vh;
+                left:50vw;
+                transform:translate(-50%, -50%);
+                background:rgba(0,0,0,0.1);
+                border-radius:4px;
+                box-sizing: border-box;
+                padding:14px;
+                opacity:0;
+                transition:opacity 0.2s ease-in-out;
+            }
+
+            body.inspecting #form {
+                opacity:1;
+            }
+
+            #form p {
+                margin:0 0 20px 0;
+                padding:0;
+            }
+
+            #form .field {
+                line-height:24px;
+            }
+
+            #form input[type=submit] {
+                background:white;
+                border:0;
+                padding:8px;
+                margin-top:16px;
+                font-size:14px;
+                font-weight:bold;
+                cursor:pointer;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="cta">
+            Drag and drop an OBJ file to convert it.
+        </div>
+        <div id="form">
+            <form>
+                <p>
+                    Source file: <strong id="filename">Test</strong>
+                </p>
+                <div class="field">
+                    <label for="positions">
+                        <input type="checkbox" id="positions" name="positions" value="1" checked>
+                        Include positions
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="normals">
+                        <input type="checkbox" id="normals" name="normals" value="1" checked>
+                        Include normals
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="uvs">
+                        <input type="checkbox" id="uvs" name="uvs" value="1">
+                        Include uvs
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="indexed">
+                        <input type="checkbox" id="indexed" name="indexed" value="1" checked>
+                        Generate an indexed geometry
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="bigEndian">
+                        <input type="checkbox" id="bigEndian" name="bigEndian" value="1">
+                        Encode in Big Endian
+                    </label>
+                </div>
+
+                <input type="submit" value="Download">
+            </form>
+        </div>
+        <script>
+            var body = document.body;
+            var filenameEl = document.getElementById('filename');
+
+            var objString = '';
+            var objFilename = '';
+
+            function downloadPrwm (fileName, arrayBuffer) {
+                // download the file
+                var blob = new Blob([arrayBuffer], {type: 'application/binary'});
+
+                var a = document.createElement('a');
+                a.download = fileName;
+                a.href = window.URL.createObjectURL(blob);
+                a.textContent = 'download-link';
+                a.style = 'position:absolute;top:-200px;left:-200px;font-size:12px;';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            var noop = function noop (e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+            };
+
+            var options = {
+                positions: true,
+                normals: true,
+                uvs: false,
+                tangents: false,
+                indexed: true,
+                bigEndian: false,
+                quiet: true
+            };
+
+            var inputs = document.querySelectorAll('.field input'),
+                button = document.querySelector('input[type=submit]');
+
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener('change', function () {
+                    options[this.name] = !!this.checked;
+                });
+            }
+
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                var arrayBuffer = obj2prwm.convert(objString, options),
+                    filename = objFilename.replace(/\.obj$/i,'') + '.'  + (options.bigEndian ? 'be' : 'le') + '.prwm';
+
+                downloadPrwm(filename, arrayBuffer);
+            });
+
+            var fileDrop = function fileDrop (e) {
+                e.preventDefault();
+
+                var files = e.target.files || e.dataTransfer.files;
+
+                // process the first File objects
+                if (files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function onload (e) {
+                        filenameEl.innerText = files[0].name;
+                        body.className = 'inspecting';
+
+                        objString = e.target.result;
+                        objFilename = files[0].name;
+                    };
+                    reader.readAsText(files[0]);
+                }
+            };
+
+            body.addEventListener("dragover", noop, false);
+            body.addEventListener("dragleave", noop, false);
+            body.addEventListener("drop", fileDrop, false);
+        </script>
+    </body>
+</html>
