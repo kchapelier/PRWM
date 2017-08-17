@@ -1,6 +1,7 @@
 "use strict";
 
 var objParser = require('wavefront-obj-parser'),
+    computeNormals = require('./utils/compute-normals'),
     prwm = require('prwm');
 
 function serializeIndexed (objData, usePositions, useNormals, useUvs) {
@@ -18,6 +19,8 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
         mapped,
         index,
         nextIndex = 0;
+
+    var mustGenerateNewNormals = useNormals && (!objData.normal|| objData.normal.length === 0);
 
     for (i = 0; i < nbPolygons; i++) {
         for (k = 0; k < 3; k++) { // assume we don't have actual quads in the models
@@ -42,7 +45,7 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
                     );
                 }
 
-                if (useNormals) {
+                if (useNormals && !mustGenerateNewNormals) {
                     normals.push(
                         objData.normal[normalIndex * 3],
                         objData.normal[normalIndex * 3 + 1],
@@ -60,6 +63,10 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
 
             indices.push(index);
         }
+    }
+
+    if (mustGenerateNewNormals) {
+        computeNormals(indices, vertices, normals);
     }
 
     return {
@@ -81,6 +88,8 @@ function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
         normalIndex,
         uvIndex;
 
+    var mustGenerateNewNormals = useNormals && (!objData.normal|| objData.normal.length === 0);
+
     for (i = 0; i < nbPolygons; i++) {
         for (k = 0; k < 3; k++) { // assume we don't have actual quads in the models
             if (usePositions) {
@@ -93,7 +102,7 @@ function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
                 );
             }
 
-            if (useNormals) {
+            if (useNormals && !mustGenerateNewNormals) {
                 normalIndex = objData.normalIndex[i * 4 + k];
 
                 normals.push(
@@ -112,6 +121,10 @@ function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
                 );
             }
         }
+    }
+
+    if (mustGenerateNewNormals) {
+        computeNormals(null, vertices, normals);
     }
 
     return {

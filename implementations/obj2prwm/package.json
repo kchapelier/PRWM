@@ -1,11 +1,20 @@
 {
   "name": "obj2prwm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CLI tool to convert WaveFront OBJ files into PRWM files.",
   "main": "index.js",
+  "scripts": {
+    "build-dev": "browserify ./index.js -d --s obj2prwm > ./build/obj2prwm.dev.js",
+    "build-min": "browserify ./index.js --s obj2prwm | uglifyjs > ./build/obj2prwm.min.js"
+  },
   "bin": {
     "obj2prwm": "cli.js"
   },
+  "files": [
+    "index.js",
+    "cli.js",
+    "utils/compute-normals.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kchapelier/PRWM.git"
