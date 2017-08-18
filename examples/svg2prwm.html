@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SVG2PRWM</title>
+        <script src="./../implementations/svg2prwm/build/svg2prwm.dev.js" charset="utf-8"></script>
+        <style>
+            html {
+                height:100%;
+            }
+
+            body {
+                margin:0;
+                padding:0;
+                min-height:100%;
+                background:#F5F5F5;
+                font-family: Lucida Grande, sans-serif;
+            }
+
+            #cta {
+                display:inline-block;
+                width:600px;
+                background:rgba(0,0,0,0.1);
+                border-radius:4px;
+                line-height:50px;
+                position:absolute;
+                top:50vh;
+                left:50vw;
+                transform:translate(-300px, -30px);
+                text-align:center;
+                opacity:1;
+                transition:opacity 0.2s ease-in-out;
+            }
+
+            body.inspecting #cta {
+                opacity:0;
+            }
+
+            #form {
+                width:500px;
+                position:absolute;
+                top:50vh;
+                left:50vw;
+                transform:translate(-50%, -50%);
+                background:rgba(0,0,0,0.1);
+                border-radius:4px;
+                box-sizing: border-box;
+                padding:14px;
+                opacity:0;
+                transition:opacity 0.2s ease-in-out;
+            }
+
+            body.inspecting #form {
+                opacity:1;
+            }
+
+            #form p {
+                margin:0 0 20px 0;
+                padding:0;
+            }
+
+            #form .field {
+                line-height:24px;
+            }
+
+            #form input[type=submit] {
+                background:white;
+                border:0;
+                padding:8px;
+                margin-top:16px;
+                font-size:14px;
+                font-weight:bold;
+                cursor:pointer;
+            }
+
+            select {
+                margin:10px 0 0 0;
+                font-family: Lucida Grande, sans-serif;
+                font-size:14px;
+            }
+
+        </style>
+    </head>
+    <body class="inspecting">
+        <div id="cta">
+            Drag and drop an SVG file to convert it.
+        </div>
+        <div id="form">
+            <form>
+                <p>
+                    Source file: <strong id="filename">Test</strong>
+                </p>
+                <div class="field">
+                    <label for="normals">
+                        <input type="checkbox" id="normals" name="normals" value="1" checked>
+                        Include normals
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="uvs">
+                        <input type="checkbox" id="uvs" name="uvs" value="1">
+                        Include uvs
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="separateTriangles">
+                        <input type="checkbox" id="separateTriangles" name="separateTriangles" value="1">
+                        Separate the triangles
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="bigEndian">
+                        <input type="checkbox" id="bigEndian" name="bigEndian" value="1">
+                        Encode in Big Endian
+                    </label>
+                </div>
+                <div class="field">
+                    <select id="quality" name="quality">
+                        <option value="0">Very low quality</option>
+                        <option value="1">Low quality</option>
+                        <option value="2">Medium quality</option>
+                        <option value="3" selected>High quality</option>
+                        <option value="4">Very high quality</option>
+                    </select>
+                </div>
+
+                <input type="submit" value="Download">
+            </form>
+        </div>
+        <script>
+            var body = document.body;
+            var filenameEl = document.getElementById('filename');
+
+            var svgString = '';
+            var svgFilename = '';
+
+            var qualityOptions = [
+                [0.05, 4.00],
+                [0.20, 1.25],
+                [0.50, 0.75],
+                [0.90, 0.50],
+                [1.00, 0.00]
+            ];
+
+            function downloadPrwm (fileName, arrayBuffer) {
+                // download the file
+                var blob = new Blob([arrayBuffer], {type: 'application/binary'});
+
+                var a = document.createElement('a');
+                a.download = fileName;
+                a.href = window.URL.createObjectURL(blob);
+                a.textContent = 'download-link';
+                a.style = 'position:absolute;top:-200px;left:-200px;font-size:12px;';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            var noop = function noop (e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+            };
+
+            var options = {
+                normals: true,
+                uvs: false,
+                separateTriangles: false,
+                bigEndian: false,
+                quiet: true,
+                scale: 1.0,
+                simplify: 0.25
+            };
+
+            var inputs = document.querySelectorAll('.field input'),
+                qualitySelect = document.getElementById('quality'),
+                button = document.querySelector('input[type=submit]');
+
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener('change', function () {
+                    options[this.name] = !!this.checked;
+                });
+            }
+
+            qualitySelect.addEventListener('change', function (e) {
+                var qualityOption = qualityOptions[parseInt(this.value, 10)];
+
+                options.scale = qualityOption[0];
+                options.simplify = qualityOption[1];
+                console.log(options);
+            });
+
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                var arrayBuffer = svg2prwm.convert(svgString, options),
+                    filename = svgFilename.replace(/\.svg/i,'') + '.'  + (options.bigEndian ? 'be' : 'le') + '.prwm';
+
+                downloadPrwm(filename, arrayBuffer);
+            });
+
+            var fileDrop = function fileDrop (e) {
+                e.preventDefault();
+
+                var files = e.target.files || e.dataTransfer.files;
+
+                // process the first File objects
+                if (files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function onload (e) {
+                        filenameEl.innerText = files[0].name;
+                        body.className = 'inspecting';
+
+                        svgString = e.target.result;
+                        svgFilename = files[0].name;
+                    };
+                    reader.readAsText(files[0]);
+                }
+            };
+
+            body.addEventListener("dragover", noop, false);
+            body.addEventListener("dragleave", noop, false);
+            body.addEventListener("drop", fileDrop, false);
+        </script>
+    </body>
+</html>
