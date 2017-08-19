@@ -9,7 +9,7 @@ Packed Raw WebGL Model is a binary file format for nD geometries specifically de
 With [npm](http://npmjs.org) do:
 
 ```
-npm install picogl-prwm-loader
+npm install picogl-prwm-loader --save
 ```
 
 ## Example
@@ -80,6 +80,10 @@ Parse a remote PRWM file and return an instance of PicoGL's VertexArray (through
 Return true if the endianness of the platform is Big Endian.
 
 ## Changelog
+
+### 1.1.0 (2017.08.19) :
+
+ * Use [new methods](https://github.com/tsherif/picogl.js/pull/55) from PicoGL 0.6.6 to fully support all attributes types.
 
 ### 1.0.0 (2017.08.15) :
 
