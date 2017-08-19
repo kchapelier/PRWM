@@ -60,9 +60,10 @@ Individual vertices : 12147
 
 ## Changelog
 
-### 1.1.0 (2017.08.16) :
+### 1.1.0 (2017.08.19) :
 
- * Allow to use the module programmatically
+ * Allow to use the module programmatically.
+ * Generate missing normals.
 
 ### 1.0.0 (2017.06.10) :
 
@@ -71,7 +72,6 @@ Individual vertices : 12147
 ## Roadmap
 
  * Support OBJ with quads
- * Support the generation of normals if there are missing
  * Support the generation of tangents
 
 ## License

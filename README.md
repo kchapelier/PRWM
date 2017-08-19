@@ -77,6 +77,18 @@ http://www.kchapelier.com/prwm/examples/prwm-inspector.html
 
 Drag and drop a PRWM file to analyze its content.
 
+### Convert OBJ to PRWM
+
+http://www.kchapelier.com/prwm/examples/obj2prwm.html
+
+Drag and drop an OBJ file (with triangles only) and convert it to PRWM.
+
+### Convert SVG to PRWM
+
+http://www.kchapelier.com/prwm/examples/svg2prwm.html
+
+Drag and drop an SVG file and convert its path to PRWM.
+
 ## Legacy
 
 Variable Precision Model (VPRM) and Variable Precision Bundle (VPRB) were older file format specifications with a focus on file size. They had a fixed endianness. They supported custom 24 bits typed array for attributes values and the indices values were encoded on the least possible amount of bits to save space (i.e. an indexed cube geometry with 24 vertices would have its indices encoded with 5 bits per value).
