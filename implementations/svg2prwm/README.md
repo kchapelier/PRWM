@@ -40,13 +40,14 @@ npm install svg2prwm -g
     * **uvs :** Generate a set of uvs.
     * **separateTriangles :** Make sure no vertex is shared between multiple triangles. Produces larger files.
     * **scale :** Scale used for the bezier curves. A higher value means a better resolution.
+    * **simplify :** Simplification amount. A higher value means a more simplified mesh.
     * **bigEndian :** Indicate that the destination file must be in Big Endian byte order. By default the destination file is in Little Endian.
     * **quiet :** Quiet mode. Silence the output to the console.
 
 ## Example
 
 ```
-$ svg2prwm -i original.svg -o destination.prwm --normals
+$ svg2prwm -i original.svg -o destination.prwm --normals --scale 1 --simplify 0.5
 
  * Reading original.svg
  * Writing destination.prwm

@@ -21,7 +21,7 @@ npm install obj2prwm -g
 **Options**
 
  * **--positions :** Include the vertices positions in the destination file.
- * **--normals :** Include the normals in the destination file.
+ * **--normals :** Include the normals in the destination file. Missing normals will be generated.
  * **--uvs :** Include the UVs in the destination file.
  * **--indexed :** Indicate that the geometry stored in the destination file must be indexed. (recommended)
  * **--be :** Indicate that the destination file must be in Big Endian byte order. By default the destination file is in Little Endian.
@@ -36,7 +36,7 @@ npm install obj2prwm -g
  * **objString :** The obj file as a string.
  * **options :** Options
     * **positions :** Include the vertices positions in the destination file.
-    * **normals :** Include the normals in the destination file.
+    * **normals :** Include the normals in the destination file. Missing normals will be generated.
     * **uvs :** Include the UVs in the destination file.
     * **indexed :** Indicate that the geometry stored in the destination file must be indexed. (recommended)
     * **bigEndian :** Indicate that the destination file must be in Big Endian byte order. By default the destination file is in Little Endian.

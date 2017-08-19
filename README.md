@@ -43,7 +43,13 @@ The reference encoder/decoder for the file format.
 
 [github](https://github.com/kchapelier/PRWM/tree/master/implementations/obj2prwm) / [npm](https://www.npmjs.com/package/obj2prwm)
 
-A simple CLI utility to convert OBJ files to PRWM files.
+A module and simple CLI utility to convert OBJ files to PRWM files.
+
+### svg2prwm
+
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/svg2prwm) / [npm](https://www.npmjs.com/package/svg2prwm)
+
+A module and simple CLI utility to convert SVG files to PRWM files.
 
 ### three-buffergeometry-to-prwm
 
@@ -81,13 +87,13 @@ Drag and drop a PRWM file to analyze its content.
 
 http://www.kchapelier.com/prwm/examples/obj2prwm.html
 
-Drag and drop an OBJ file (with triangles only) and convert it to PRWM.
+A basic GUI for obj2prwm. Drag and drop an OBJ file (with triangles only) and convert it to PRWM.
 
 ### Convert SVG to PRWM
 
 http://www.kchapelier.com/prwm/examples/svg2prwm.html
 
-Drag and drop an SVG file and convert its path to PRWM.
+A basic GUI for svg2prwm. Drag and drop an SVG file and convert its path to PRWM.
 
 ## Legacy
 
