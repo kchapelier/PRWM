@@ -59,7 +59,7 @@ A module to create a PRWM file out of any instance of THREE.BufferGeometry. Usef
 
 ### three-prwm-loader
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [npm](https://www.npmjs.com/package/three-prwm-loader) / [online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
 
 Merged in Three.js since r86: [github](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/PRWMLoader.js) / [online example](https://threejs.org/examples/?q=prwm#webgl_loader_prwm)
 
