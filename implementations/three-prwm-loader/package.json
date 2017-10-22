@@ -1,0 +1,31 @@
+{
+  "name": "three-prwm-loader",
+  "version": "1.0.0",
+  "description": "PRWM loader for Three.js",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "browserify ./index.js -d --s PRWMLoaderWrapper > ./build/PRWMLoader.dev.js",
+    "build-min": "browserify ./index.js --s PRWMLoaderWrapper | uglifyjs > ./build/PRWMLoader.min.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kchapelier/PRWM.git"
+  },
+  "keywords": [
+    "three",
+    "threejs",
+    "three.js",
+    "prwm"
+  ],
+  "author": "Kevin Chapelier",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/kchapelier/PRWM/issues"
+  },
+  "homepage": "https://github.com/kchapelier/PRWM",
+  "dependencies": {}
+}
