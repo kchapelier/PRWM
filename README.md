@@ -25,7 +25,7 @@ When using PRWM files, it is strongly recommended to :
 * always provide Little-Endian and Big-Endian versions of the files
 * to check the endianness of the client platform and request the correct file
 
-The reference encoder/decoder provides a method to check the endianness of the platform. The Three.js loader has an additional `loadBest` method which takes two urls, one for the Little-Endian file and another for the Big-Endian file, and load the correct one.
+The reference encoder/decoder provides a method to check the endianness of the platform.
 
 ## Specifications
 

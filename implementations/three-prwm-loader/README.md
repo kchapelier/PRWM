@@ -52,16 +52,20 @@ Parse a PRWM file passed as an ArrayBuffer and directly return an instance of TH
 
  * arrayBuffer: ArrayBuffer containing the PRWM data.
 
-### loader.load(url, onLoad, onProgress, onError)
+### loader.load(url, onLoad [, onProgress[, onError]])
 
 Parse a remote PRWM file and return an instance of THREE.BufferGeometry (through a callback).
 
 **Arguments**
 
- * url: Url of the PRWM file to load. Any `*` character will be replaced by `le` or `be` depending on the system endianness.
+ * url: Url of the PRWM file to load. Any `*` character will be replaced by `le` or `be` depending on the platform endianness. (see the [guidelines](https://github.com/kchapelier/PRWM/#guidelines))
  * onLoad: Will be called when load completes. The argument will be the loaded BufferGeometry.
  * onProgress: Will be called while load progresses. The argument will be the XMLHttpRequest instance, which contains .total and .loaded bytes.
  * onError: Will be called when load errors.
+
+### PRWMLoader.isBigEndianPlatform()
+
+Return true if the endianness of the platform is Big Endian.
 
 ## Changelog
 

@@ -4,8 +4,8 @@
   "description": "PRWM loader for Three.js",
   "main": "index.js",
   "scripts": {
-    "build-dev": "browserify ./index.js -d --s PRWMLoaderWrapper > ./build/PRWMLoader.dev.js",
-    "build-min": "browserify ./index.js --s PRWMLoaderWrapper | uglifyjs > ./build/PRWMLoader.min.js"
+    "build-dev": "browserify ./index.js -d --s PRWMLoaderWrapper > ./build/three-prwm-loader.dev.js",
+    "build-min": "browserify ./index.js --s PRWMLoaderWrapper | uglifyjs > ./build/three-prwm-loader.min.js"
   },
   "files": [
     "index.js"
