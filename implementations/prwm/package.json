@@ -1,6 +1,6 @@
 {
   "name": "prwm",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Packed Raw WebGl Model file format encoder/decoder",
   "main": "index.js",
   "scripts": {

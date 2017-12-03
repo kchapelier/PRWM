@@ -142,11 +142,16 @@ Return true for Big Endian, false for Little Endian.
  * **indices :** The indices of the geometry, can be either null (for non-indexed property), an Uint16Array or an Uint32Array.
  * **bigEndian :** Whether to generate the file in Big Endian byte order.
 
-### prwm.decode(prwmData)
+### prwm.decode(prwmData, offset)
 
  * **prwmData :** An ArrayBuffer with the content of a PRWM file.
+ * **offset :** Offset (in bytes) at which the PRWM file content is located in the ArrayBuffer. Must be a multiple of 4. Defaults to 0.
 
 ## Changelog
+
+### 1.2.0 (2017.12.03) :
+
+ * Add `offset` parameter to decode function.
 
 ### 1.1.0 (2017.08.15) :
 

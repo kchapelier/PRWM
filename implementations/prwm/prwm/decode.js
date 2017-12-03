@@ -47,8 +47,10 @@ function copyFromBuffer (sourceArrayBuffer, viewType, position, length, fromBigE
     return result;
 }
 
-function decode (buffer) {
-    var array = new Uint8Array(buffer),
+function decode (buffer, offset) {
+    offset = offset || 0;
+
+    var array = new Uint8Array(buffer, offset),
         version = array[0],
         flags = array[1],
         indexedGeometry = !!(flags >> 7),
@@ -67,6 +69,10 @@ function decode (buffer) {
     }
 
     /** PRELIMINARY CHECKS **/
+
+    if (offset / 4 % 1 !== 0) {
+        throw new Error('PRWM decoder: Offset should be a multiple of 4, received ' + offset);
+    }
 
     if (version === 0) {
         throw new Error('PRWM decoder: Invalid format version: 0');
@@ -124,7 +130,7 @@ function decode (buffer) {
         // padding to next multiple of 4
         pos = Math.ceil(pos / 4) * 4;
 
-        values = copyFromBuffer(buffer, arrayType, pos, cardinality * valuesNumber, bigEndian);
+        values = copyFromBuffer(buffer, arrayType, pos + offset, cardinality * valuesNumber, bigEndian);
 
         pos+= arrayType.BYTES_PER_ELEMENT * cardinality * valuesNumber;
 
@@ -144,7 +150,7 @@ function decode (buffer) {
         indices = copyFromBuffer(
             buffer,
             indicesType === 1 ? Uint32Array : Uint16Array,
-            pos,
+            pos + offset,
             indicesNumber,
             bigEndian
         );
