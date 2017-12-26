@@ -1,6 +1,6 @@
 {
   "name": "obj2prwm",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CLI tool to convert WaveFront OBJ files into PRWM files.",
   "main": "index.js",
   "scripts": {
@@ -32,8 +32,8 @@
   },
   "homepage": "https://github.com/kchapelier/PRWM",
   "dependencies": {
-    "prwm": "^1.0.0",
-    "wavefront-obj-parser": "~1.0.0",
-    "yargs": "~8.0.1"
+    "prwm": "^1.2.0",
+    "wavefront-obj-parser": "~2.0.1",
+    "yargs": "~10.0.3"
   }
 }

@@ -60,6 +60,10 @@ Individual vertices : 12147
 
 ## Changelog
 
+### 1.1.1 (2017.12.26) :
+
+ * Update `wavefront-obj-parser` and other dependencies.
+
 ### 1.1.0 (2017.08.19) :
 
  * Allow to use the module programmatically.

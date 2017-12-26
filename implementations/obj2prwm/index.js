@@ -5,7 +5,7 @@ var objParser = require('wavefront-obj-parser'),
     prwm = require('prwm');
 
 function serializeIndexed (objData, usePositions, useNormals, useUvs) {
-    var nbPolygons = objData.vertexIndex.length / 4, // the parser always return indices by group of 4 to support quads
+    var nbPolygons = objData.vertexPositionIndices.length / 4, // the parser always return indices by group of 4 to support quads
         indicesMapping = {},
         indices = [],
         vertices = [],
@@ -20,13 +20,13 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
         index,
         nextIndex = 0;
 
-    var mustGenerateNewNormals = useNormals && (!objData.normal|| objData.normal.length === 0);
+    var mustGenerateNewNormals = useNormals && (!objData.vertexNormals|| objData.vertexNormals.length === 0);
 
     for (i = 0; i < nbPolygons; i++) {
         for (k = 0; k < 3; k++) { // assume we don't have actual quads in the models
-            vertexIndex = objData.vertexIndex[i * 4 + k];
-            normalIndex = objData.normalIndex[i * 4 + k];
-            uvIndex = objData.uvIndex[i * 4 + k];
+            vertexIndex = objData.vertexPositionIndices[i * 4 + k];
+            normalIndex = objData.vertexNormalIndices[i * 4 + k];
+            uvIndex = objData.vertexUVIndices[i * 4 + k];
 
             mapped = (usePositions ? vertexIndex + ':' : ':') + (useNormals ? normalIndex + ':' : ':') + (useUvs ? uvIndex + ':' : ':');
 
@@ -39,24 +39,24 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
 
                 if (usePositions) {
                     vertices.push(
-                        objData.vertex[vertexIndex * 3],
-                        objData.vertex[vertexIndex * 3 + 1],
-                        objData.vertex[vertexIndex * 3 + 2]
+                        objData.vertexPositions[vertexIndex * 3],
+                        objData.vertexPositions[vertexIndex * 3 + 1],
+                        objData.vertexPositions[vertexIndex * 3 + 2]
                     );
                 }
 
                 if (useNormals && !mustGenerateNewNormals) {
                     normals.push(
-                        objData.normal[normalIndex * 3],
-                        objData.normal[normalIndex * 3 + 1],
-                        objData.normal[normalIndex * 3 + 2]
+                        objData.vertexNormals[normalIndex * 3],
+                        objData.vertexNormals[normalIndex * 3 + 1],
+                        objData.vertexNormals[normalIndex * 3 + 2]
                     );
                 }
 
                 if (useUvs) {
                     uvs.push(
-                        objData.uv[uvIndex * 2],
-                        objData.uv[uvIndex * 2 + 1]
+                        objData.vertexUVs[uvIndex * 2],
+                        objData.vertexUVs[uvIndex * 2 + 1]
                     );
                 }
             }
@@ -78,7 +78,7 @@ function serializeIndexed (objData, usePositions, useNormals, useUvs) {
 }
 
 function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
-    var nbPolygons = objData.vertexIndex.length / 4, // the parser always return indices by group of 4 to support quads
+    var nbPolygons = objData.vertexPositionIndices.length / 4, // the parser always return indices by group of 4 to support quads
         vertices = [],
         normals = [],
         uvs = [],
@@ -88,36 +88,36 @@ function serializeNonIndexed (objData, usePositions, useNormals, useUvs) {
         normalIndex,
         uvIndex;
 
-    var mustGenerateNewNormals = useNormals && (!objData.normal|| objData.normal.length === 0);
+    var mustGenerateNewNormals = useNormals && (!objData.vertexNormals|| objData.vertexNormals.length === 0);
 
     for (i = 0; i < nbPolygons; i++) {
         for (k = 0; k < 3; k++) { // assume we don't have actual quads in the models
             if (usePositions) {
-                vertexIndex = objData.vertexIndex[i * 4 + k];
+                vertexIndex = objData.vertexPositionIndices[i * 4 + k];
 
                 vertices.push(
-                    objData.vertex[vertexIndex * 3],
-                    objData.vertex[vertexIndex * 3 + 1],
-                    objData.vertex[vertexIndex * 3 + 2]
+                    objData.vertexPositions[vertexIndex * 3],
+                    objData.vertexPositions[vertexIndex * 3 + 1],
+                    objData.vertexPositions[vertexIndex * 3 + 2]
                 );
             }
 
             if (useNormals && !mustGenerateNewNormals) {
-                normalIndex = objData.normalIndex[i * 4 + k];
+                normalIndex = objData.vertexNormalIndices[i * 4 + k];
 
                 normals.push(
-                    objData.normal[normalIndex * 3],
-                    objData.normal[normalIndex * 3 + 1],
-                    objData.normal[normalIndex * 3 + 2]
+                    objData.vertexNormals[normalIndex * 3],
+                    objData.vertexNormals[normalIndex * 3 + 1],
+                    objData.vertexNormals[normalIndex * 3 + 2]
                 );
             }
 
             if (useUvs) {
-                uvIndex = objData.uvIndex[i * 4 + k];
+                uvIndex = objData.vertexUVIndices[i * 4 + k];
 
                 uvs.push(
-                    objData.uv[uvIndex * 2],
-                    objData.uv[uvIndex * 2 + 1]
+                    objData.vertexUVs[uvIndex * 2],
+                    objData.vertexUVs[uvIndex * 2 + 1]
                 );
             }
         }
