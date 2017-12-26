@@ -1,6 +1,6 @@
 {
   "name": "picogl-prwm-loader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "PRWM loader for PicoGL.js",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/kchapelier/PRWM",
   "dependencies": {
-    "prwm": "^1.0.0"
+    "prwm": "^1.2.0"
   }
 }

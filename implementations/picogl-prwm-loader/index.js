@@ -2,8 +2,6 @@
 
 var prwm = require('prwm');
 
-"use strict";
-
 /**
  * Instantiate a loader for PRWM files
  * @param {object} picoGL PicoGL namespace
@@ -73,12 +71,13 @@ PRWMLoader.prototype.getAttributeTypeForTypedArray = function (typedArray) {
  * Parse a PRWM file passed as an ArrayBuffer and directly return an instance of PicoGL's VertexArray
  * @param {ArrayBuffer} arrayBuffer ArrayBuffer containing the PRWM data
  * @param {object} attributeMapping Literal object with attribute name => attribute index mapping
+ * @param {int} [offset=0] Offset (in bytes) at which the PRWM file content is located in the ArrayBuffer. Must be a multiple of 4.
  * @returns {object} Instance of PicoGL's VertexArray
  */
-PRWMLoader.prototype.parse = function (arrayBuffer, attributeMapping) {
+PRWMLoader.prototype.parse = function (arrayBuffer, attributeMapping, offset) {
     var attributeKeys = Object.keys(attributeMapping),
         decodeStart = performance.now(),
-        data = prwm.decode(arrayBuffer),
+        data = prwm.decode(arrayBuffer, offset),
         timeToDecode = (performance.now() - decodeStart).toFixed(3);
 
     if (this.verbose) {

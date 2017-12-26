@@ -56,7 +56,7 @@ Set the verbosity of the loader.
 
  * verbose : Whether the loader should be verbose (true) or silent (false).
 
-### loader.parse(arrayBuffer, attributeMapping)
+### loader.parse(arrayBuffer, attributeMapping, offset)
 
 Parse a PRWM file passed as an ArrayBuffer and directly return an instance of PicoGL's VertexArray.
 
@@ -64,6 +64,7 @@ Parse a PRWM file passed as an ArrayBuffer and directly return an instance of Pi
 
  * arrayBuffer: ArrayBuffer containing the PRWM data.
  * attributeMapping: Literal object with attribute name => attribute index mapping.
+ * offset: Offset (in bytes) at which the PRWM file content is located in the ArrayBuffer. Must be a multiple of 4.
 
 ### loader.load(url, attributeMapping, onSuccess)
 
@@ -80,6 +81,10 @@ Parse a remote PRWM file and return an instance of PicoGL's VertexArray (through
 Return true if the endianness of the platform is Big Endian.
 
 ## Changelog
+
+### 1.1.1 (2017.12.26) :
+
+ * Add `offset` argument in `parse()`.
 
 ### 1.1.0 (2017.08.19) :
 
