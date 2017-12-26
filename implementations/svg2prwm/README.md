@@ -60,6 +60,10 @@ Individual vertices : 263
 
 ## Changelog
 
+### 1.0.1 (2017.12.26) :
+
+ * Update dependencies.
+
 ### 1.0.0 (2017.08.19) :
 
  * First release.

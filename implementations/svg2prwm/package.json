@@ -1,6 +1,6 @@
 {
   "name": "svg2prwm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI tool to convert SVG files into PRWM files.",
   "main": "index.js",
   "scripts": {
@@ -31,10 +31,10 @@
   "homepage": "https://github.com/kchapelier/PRWM",
   "dependencies": {
     "extract-svg-path": "~2.1.0",
-    "mesh-reindex": "^1.0.0",
-    "prwm": "^1.0.0",
+    "mesh-reindex": "~1.0.0",
+    "prwm": "^1.2.0",
     "svg-mesh-3d": "~1.1.0",
-    "unindex-mesh": "^2.0.0",
-    "yargs": "~8.0.1"
+    "unindex-mesh": "~2.0.0",
+    "yargs": "~10.0.3"
   }
 }
