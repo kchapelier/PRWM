@@ -44,13 +44,14 @@ Instantiate a loader for PRWM files.
 
  * manager: An instance of [THREE.LoadingManager](https://threejs.org/docs/#api/loaders/managers/LoadingManager), will use THREE.DefaultLoadingManager by default.
 
-### loader.parse(arrayBuffer)
+### loader.parse(arrayBuffer [, offset])
 
 Parse a PRWM file passed as an ArrayBuffer and directly return an instance of THREE.BufferGeometry.
 
 **Arguments**
 
  * arrayBuffer: ArrayBuffer containing the PRWM data.
+ * offset: Offset (in bytes) at which the PRWM file content is located in the ArrayBuffer. Must be a multiple of 4.
 
 ### loader.load(url, onLoad [, onProgress[, onError]])
 
@@ -68,6 +69,10 @@ Parse a remote PRWM file and return an instance of THREE.BufferGeometry (through
 Return true if the endianness of the platform is Big Endian.
 
 ## Changelog
+
+### 1.1.0 (2017.12.26) :
+
+ * Add `offset` argument in `parse()`.
 
 ### 1.0.0 (2017.10.22) :
 

@@ -88,9 +88,10 @@
 	}
 
 
-	function decodePrwm( buffer ) {
+	function decodePrwm( buffer, offset ) {
+		offset = offset || 0;
 
-		var array = new Uint8Array( buffer ),
+		var array = new Uint8Array( buffer, offset ),
 			version = array[ 0 ],
 			flags = array[ 1 ],
 			indexedGeometry = !! ( flags >> 7 & 0x01 ),
@@ -113,6 +114,12 @@
 		}
 
 		/** PRELIMINARY CHECKS **/
+
+		if ( offset / 4 % 1 !== 0 ) {
+
+			throw new Error( 'PRWM decoder: Offset should be a multiple of 4, received ' + offset );
+
+		}
 
 		if ( version === 0 ) {
 
@@ -188,7 +195,7 @@
 			// padding to next multiple of 4
 			pos = Math.ceil( pos / 4 ) * 4;
 
-			values = copyFromBuffer( buffer, arrayType, pos, cardinality * valuesNumber, bigEndian );
+			values = copyFromBuffer( buffer, arrayType, pos + offset, cardinality * valuesNumber, bigEndian );
 
 			pos += arrayType.BYTES_PER_ELEMENT * cardinality * valuesNumber;
 
@@ -209,7 +216,7 @@
 			indices = copyFromBuffer(
 				buffer,
 				indicesType === 1 ? Uint32Array : Uint16Array,
-				pos,
+				pos + offset,
 				indicesNumber,
 				bigEndian
 			);
@@ -253,11 +260,11 @@
 
 		},
 
-		parse: function ( arrayBuffer ) {
+		parse: function ( arrayBuffer, offset ) {
 
 			console.time( 'PRWMLoader' );
 
-			var data = decodePrwm( arrayBuffer ),
+			var data = decodePrwm( arrayBuffer, offset ),
 				attributesKey = Object.keys( data.attributes ),
 				bufferGeometry = new THREE.BufferGeometry(),
 				attribute,
