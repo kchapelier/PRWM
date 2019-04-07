@@ -70,6 +70,10 @@ Return true if the endianness of the platform is Big Endian.
 
 ## Changelog
 
+### 1.1.1 (2019.04.07) :
+
+ * Retrieve changes from Three.js repository, implement setPath.
+
 ### 1.1.0 (2017.12.26) :
 
  * Add `offset` argument in `parse()`.

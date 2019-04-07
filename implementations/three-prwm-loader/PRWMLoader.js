@@ -5,7 +5,7 @@
 
 ( function ( THREE ) {
 
-	"use strict";
+	'use strict';
 
 	var bigEndianPlatform = null;
 
@@ -153,7 +153,6 @@
 			attributeName,
 			char,
 			attributeType,
-			attributeNormalized,
 			cardinality,
 			encodingType,
 			arrayType,
@@ -185,7 +184,6 @@
 			flags = array[ pos ];
 
 			attributeType = flags >> 7 & 0x01;
-			attributeNormalized = !! ( flags >> 6 & 0x01 );
 			cardinality = ( flags >> 4 & 0x03 ) + 1;
 			encodingType = flags & 0x0F;
 			arrayType = InvertedEncodingTypes[ encodingType ];
@@ -250,6 +248,7 @@
 			url = url.replace( /\*/g, isBigEndianPlatform() ? 'be' : 'le' );
 
 			var loader = new THREE.FileLoader( scope.manager );
+			loader.setPath( scope.path );
 			loader.setResponseType( 'arraybuffer' );
 
 			loader.load( url, function ( arrayBuffer ) {
@@ -257,6 +256,13 @@
 				onLoad( scope.parse( arrayBuffer ) );
 
 			}, onProgress, onError );
+
+		},
+
+		setPath: function ( value ) {
+
+			this.path = value;
+			return this;
 
 		},
 
