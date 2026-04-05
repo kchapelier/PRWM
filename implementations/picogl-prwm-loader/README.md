@@ -35,7 +35,7 @@ loader.load(
 );
 ```
 
-[Online example](http://www.kchapelier.com/prwm/examples/picogl-prwm-loader.html)
+[Online example](http://kchplr.eu/prwm/examples/picogl-prwm-loader.html)
 
 ## API
 
