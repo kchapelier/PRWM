@@ -53,13 +53,13 @@ A module and simple CLI utility to convert SVG files to PRWM files.
 
 ### three-buffergeometry-to-prwm
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-buffergeometry-to-prwm) / [npm](https://www.npmjs.com/package/three-buffergeometry-to-prwm) / [online example](http://www.kchplr.eu/prwm/examples/three-buffergeometry-to-prwm.html)
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-buffergeometry-to-prwm) / [npm](https://www.npmjs.com/package/three-buffergeometry-to-prwm) / [online example](http://kchplr.eu/prwm/examples/three-buffergeometry-to-prwm.html)
 
 A module to create a PRWM file out of any instance of THREE.BufferGeometry. Useful for procedural generation application
 
 ### three-prwm-loader
 
-[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [npm](https://www.npmjs.com/package/three-prwm-loader) / [online example](http://www.kchplr.eu/prwm/examples/three-prwm-loader.html) / [online benchmark](http://www.kchplr.eu/prwm/examples/three-prwm-loader-benchmark.html)
+[github](https://github.com/kchapelier/PRWM/tree/master/implementations/three-prwm-loader) / [npm](https://www.npmjs.com/package/three-prwm-loader) / [online example](http://kchplr.eu/prwm/examples/three-prwm-loader.html) / [online benchmark](http://kchplr.eu/prwm/examples/three-prwm-loader-benchmark.html)
 
 Merged in Three.js since r86: [github](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/PRWMLoader.js) / [online example](https://threejs.org/examples/?q=prwm#webgl_loader_prwm)
 
@@ -85,13 +85,13 @@ Drag and drop a PRWM file to analyze its content.
 
 ### Convert OBJ to PRWM
 
-http://www.kchplr.eu/prwm/examples/obj2prwm.html
+http://kchplr.eu/prwm/examples/obj2prwm.html
 
 A basic GUI for obj2prwm. Drag and drop an OBJ file (with triangles only) and convert it to PRWM.
 
 ### Convert SVG to PRWM
 
-http://www.kchplr.eu/prwm/examples/svg2prwm.html
+http://kchplr.eu/prwm/examples/svg2prwm.html
 
 A basic GUI for svg2prwm. Drag and drop an SVG file and convert its path to PRWM.
 
