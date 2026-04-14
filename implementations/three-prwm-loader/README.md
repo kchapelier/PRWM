@@ -30,9 +30,9 @@ loader.load('./models/mymodel.le.prwm', function onLoad (bufferGeometry) {
 });
 ```
 
-[Online example](http://www.kchapelier.com/prwm/examples/three-prwm-loader.html)
+[Online example](http://kchplr.eu/prwm/examples/three-prwm-loader.html)
 
-[Benchmark](http://www.kchapelier.com/prwm/examples/three-prwm-loader-benchmark.html)
+[Benchmark](http://kchplr.eu/prwm/examples/three-prwm-loader-benchmark.html)
 
 ## API
 
